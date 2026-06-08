@@ -1,0 +1,185 @@
+.navbar-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(18, 9, 4, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(240, 105, 15, 0.1);
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-area .logo {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-light);
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.logo-area .logo span {
+  color: var(--autumn-500);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 0;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--autumn-400);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--autumn-500);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+  width: 100%;
+}
+
+.admin-badge {
+  background: rgba(240, 105, 15, 0.15);
+  color: var(--autumn-300) !important;
+  padding: 6px 12px !important;
+  border-radius: 20px;
+  border: 1px solid rgba(240, 105, 15, 0.3);
+}
+
+.admin-badge:hover {
+  background: var(--autumn-500) !important;
+  color: var(--text-light) !important;
+}
+
+.admin-badge::after {
+  display: none !important;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.cart-btn {
+  color: var(--text-light);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+  padding: 4px;
+}
+
+.cart-btn:hover {
+  color: var(--autumn-400);
+}
+
+.cart-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: var(--autumn-500);
+  color: var(--text-light);
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: 0 0 10px rgba(240, 105, 15, 0.5);
+  animation: bounce 0.3s ease-out;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-welcome {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.user-welcome strong {
+  color: var(--text-light);
+}
+
+.logout-btn,
+.login-btn {
+  background: transparent;
+  border: 1px solid var(--autumn-600);
+  color: var(--text-light);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover,
+.login-btn:hover {
+  background: var(--autumn-500);
+  border-color: var(--autumn-500);
+  box-shadow: 0 4px 15px rgba(240, 105, 15, 0.3);
+}
+
+.logout-icon {
+  width: 16px;
+  height: 16px;
+}
+
+@keyframes bounce {
+  0% { transform: scale(0.3); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1.0); }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none; /* In a full responsive layout, this would toggle, but we keep it simple */
+  }
+}

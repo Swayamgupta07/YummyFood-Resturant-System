@@ -1,0 +1,139 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="badge-seasonal">
+        <span class="emoji">🍁</span> Autumn Season Specials
+      </div>
+      <h1 class="hero-title">
+        Savor the Warmth of <br />
+        <span>Autumn Flavors</span>
+      </h1>
+      <p class="hero-desc">
+        Experience hand-picked seasonal ingredients crafted into exquisite culinary masterpieces. From our kitchen to your doorstep, warm and fresh.
+      </p>
+      <div class="hero-ctas">
+        <a href="#menu" class="btn-primary">Explore Menu</a>
+        <a href="#about" class="btn-secondary">Learn More</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <h3>50+</h3>
+          <p>Dishes</p>
+        </div>
+        <div class="stat-item">
+          <h3>4.9 ★</h3>
+          <p>Rating</p>
+        </div>
+        <div class="stat-item">
+          <h3>25m</h3>
+          <p>Delivery</p>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="image-wrapper">
+        <img src="https://www.shutterstock.com/image-photo/traditional-indian-thali-full-meal-600nw-2773571235.jpg" alt="Autumn Special Steak" class="hero-food-img" />
+        <div class="floating-badge badge-1">
+          <span class="emoji">🔥</span> Hot & Fresh
+        </div>
+        <div class="floating-badge badge-2">
+          <span class="emoji">⭐</span> Chef Choice
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Info Cards Section -->
+  <section class="info-section">
+    <div class="info-card">
+      <div class="info-icon">🍳</div>
+      <h3>Premium Chefs</h3>
+      <p>Prepared by award winning culinary professionals using refined traditional recipes.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🥕</div>
+      <h3>Fresh Harvest</h3>
+      <p>100% organic, handpicked vegetables and farm-fresh ingredients for rich nutrition.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🛵</div>
+      <h3>Swift Delivery</h3>
+      <p>Our dedicated delivery champions ensure your food arrives hot, fresh and on time.</p>
+    </div>
+  </section>
+
+  <!-- Menu Section -->
+  <section id="menu" class="menu-section">
+    <div class="section-header">
+      <span class="subtitle">Our Offerings</span>
+      <h2>Browse Our Gourmets</h2>
+      <p>Filter by categories or search for your favorite autumn delicacies.</p>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="menu-controls">
+      <div class="category-pills">
+        @for (category of categories; track category) {
+          <button
+            [class.active]="selectedCategory === category"
+            (click)="selectCategory(category)"
+            class="pill-btn"
+          >
+            {{ category }}
+          </button>
+        }
+      </div>
+
+      <div class="search-box">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          (input)="onSearchChange()"
+          placeholder="Search items..."
+        />
+      </div>
+    </div>
+
+    <!-- Food Items Grid -->
+    <div class="food-grid">
+      @for (food of filteredItems; track food.id) {
+        <div class="food-card">
+          <div class="card-image">
+            <img [src]="food.imageUrl" [alt]="food.name" />
+            <span class="card-category">{{ food.category }}</span>
+            @if (food.freeDelivery) {
+              <span class="free-delivery-badge">Free Delivery</span>
+            }
+          </div>
+          <div class="card-body">
+            <div class="card-header-row">
+              <h3 [routerLink]="['/food', food.id]">{{ food.name }}</h3>
+              <span class="rating">4.8 ★</span>
+            </div>
+            <p class="description">{{ food.description }}</p>
+            <div class="card-footer-row">
+              <span class="price">₹{{ food.price.toFixed(2) }}</span>
+              <button (click)="addToCart(food)" class="add-to-cart-btn" aria-label="Add to cart">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-state">
+          <div class="empty-icon">🍽️</div>
+          <h3>No items found</h3>
+          <p>Try searching for a different dish or clear your filters.</p>
+        </div>
+      }
+    </div>
+  </section>
+</div>

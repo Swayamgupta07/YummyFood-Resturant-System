@@ -1,0 +1,45 @@
+<header class="navbar-header">
+  <div class="container navbar-container">
+    <div class="logo-area">
+      <a routerLink="/home" class="logo">Yummy<span>Food</span></a>
+    </div>
+
+    <nav class="nav-links">
+      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a routerLink="/home" routerLinkActive="active">Menu</a>
+      <a routerLink="/order-history" routerLinkActive="active">Orders</a>
+      @if (user?.role === 'ADMIN') {
+        <a routerLink="/admin" routerLinkActive="active" class="admin-badge">Admin Panel</a>
+      }
+    </nav>
+
+    <div class="user-actions">
+      <a routerLink="/cart" class="cart-btn" aria-label="Cart">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart-icon">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        @if (cart.totalCount() > 0) {
+          <span class="cart-badge">{{ cart.totalCount() }}</span>
+        }
+      </a>
+
+      @if (user) {
+        <div class="profile-section">
+          <span class="user-welcome">Hello, <strong>{{ user.name }}</strong></span>
+          <button (click)="logout()" class="logout-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logout-icon">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      } @else {
+        <a routerLink="/login" class="login-btn">Sign In</a>
+      }
+    </div>
+  </div>
+</header>

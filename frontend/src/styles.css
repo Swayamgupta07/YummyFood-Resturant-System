@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  --autumn-50: rgb(253, 240, 231);
+  --autumn-100: rgb(252, 225, 207);
+  --autumn-200: rgb(249, 195, 159);
+  --autumn-300: rgb(246, 165, 111);
+  --autumn-400: rgb(243, 135, 63);
+  --autumn-500: rgb(240, 105, 15);
+  --autumn-600: rgb(192, 84, 12);
+  --autumn-700: rgb(144, 63, 9);
+  --autumn-800: rgb(96, 42, 6);
+  --autumn-900: rgb(48, 21, 3);
+  --autumn-950: rgb(34, 15, 2);
+
+  --bg-dark: #120904;
+  --bg-card-dark: rgba(34, 15, 2, 0.6);
+  --text-light: #fff5eb;
+  --text-muted: #dcc2b0;
+  
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--autumn-950);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--autumn-700);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--autumn-500);
+}
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}

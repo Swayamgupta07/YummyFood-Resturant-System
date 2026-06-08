@@ -1,0 +1,35 @@
+@if (showNavbar()) {
+  <app-navbar></app-navbar>
+}
+
+<main class="app-content">
+  <router-outlet></router-outlet>
+</main>
+
+@if (showNavbar()) {
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <h3 class="brand-logo">Yummy<span>Food</span></h3>
+        <p>Bringing premium, gourmet dishes prepared by top-tier chefs directly to your doorstep. Experience restaurant-grade dining in the comfort of your home.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="/home">Home</a></li>
+          <li><a href="/home#menu">Our Menu</a></li>
+          <li><a href="/order-history">Order History</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Get in Touch</h4>
+        <p>Email: support@yummyfood.com</p>
+        <p>Phone: +1 (555) 019-2834</p>
+        <p>Location: Kanpur, Uttar Pradesh</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 YummyFood Restaurant. All rights reserved.</p>
+    </div>
+  </footer>
+}
