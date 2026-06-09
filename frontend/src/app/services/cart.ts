@@ -8,7 +8,6 @@ import { Food } from '../models/food';
 export class CartService {
   private cartItems = signal<CartItem[]>([]);
 
-  // Read-only signals for easy template binding
   items = this.cartItems.asReadonly();
 
   totalCount = computed(() => {

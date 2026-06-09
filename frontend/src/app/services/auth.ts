@@ -9,7 +9,7 @@ import { AuthResponse, LoginRequest, RegisterRequest } from '../models/user';
 export class Auth {
   private apiUrl = 'http://localhost:5000/api/auth';
 
-  constructor(@Inject(HttpClient) private http: HttpClient) {}
+  constructor( private http: HttpClient) {}
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((res: AuthResponse) => {

@@ -1,11 +1,11 @@
 .app-content {
-  min-height: calc(100vh - 80px - 320px); /* Adjust based on nav & footer height */
+  min-height: calc(100vh - 80px - 320px);
   display: flex;
   flex-direction: column;
 }
 
 .app-footer {
-  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--autumn-950) 100%);
+  background: linear-gradient(180deg, var(--bg-dark) 0%, var(--Summer-950) 100%);
   border-top: 1px solid rgba(240, 105, 15, 0.1);
   padding: 60px 0 20px;
   color: var(--text-muted);
@@ -34,7 +34,7 @@
 }
 
 .footer-brand h3 span {
-  color: var(--autumn-500);
+  color: var(--Summer-500);
 }
 
 .footer-brand p {
@@ -60,7 +60,7 @@
   bottom: -6px;
   width: 30px;
   height: 2px;
-  background-color: var(--autumn-500);
+  background-color: var(--Summer-500);
 }
 
 .footer-links ul {
@@ -79,7 +79,7 @@
 }
 
 .footer-links ul li a:hover {
-  color: var(--autumn-400);
+  color: var(--Summer-400);
 }
 
 .footer-contact p {
