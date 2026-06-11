@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth';
+import { AuthResponse } from '../../models/user';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password');
@@ -39,6 +40,7 @@ export class Register {
       {
         name: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
+        phone: ['', [Validators.required, Validators.pattern(/^(?:\+91)?\d{10}$/)]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required],
       },
@@ -52,6 +54,10 @@ export class Register {
 
   get email() {
     return this.registerForm.get('email');
+  }
+
+  get phone() {
+    return this.registerForm.get('phone');
   }
 
   get password() {
@@ -71,12 +77,16 @@ export class Register {
     this.isLoading = true;
     this.errorMessage = '';
 
-    const { name, email, password } = this.registerForm.value;
+    const { name, email, phone, password } = this.registerForm.value;
 
-    this.authService.register({ name, email, password, role: 'CUSTOMER' }).subscribe({
-      next: () => {
+    this.authService.register({ name, email, phone, password, role: 'CUSTOMER' }).subscribe({
+      next: (res: AuthResponse) => {
         this.isLoading = false;
-        this.router.navigate(['/home']);
+        if (res.user.role === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/home']);
+        }
       },
       error: (err: { error?: { message?: string } }) => {
         this.isLoading = false;

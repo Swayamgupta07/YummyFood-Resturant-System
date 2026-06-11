@@ -1,0 +1,334 @@
+.category-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 100px;
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.breadcrumb a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: var(--autumn-400);
+}
+
+.active-crumb {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Header */
+.category-header {
+  margin-bottom: 40px;
+}
+
+.category-header h1 {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--text-light);
+  margin-bottom: 12px;
+}
+
+.category-header p {
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+/* Filter Toolbar */
+.filter-toolbar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-light);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  outline: none;
+  box-shadow: none;
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.filter-active {
+  border-color: var(--autumn-500);
+  background: rgba(240, 105, 15, 0.1);
+  color: var(--autumn-300);
+}
+
+.active-pill {
+  background: var(--autumn-500) !important;
+  border-color: var(--autumn-500) !important;
+  color: var(--text-light) !important;
+  box-shadow: 0 4px 15px rgba(240, 105, 15, 0.3);
+}
+
+.filter-svg,
+.chevron-svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Sort Dropdown */
+.sort-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #1a0f08;
+  border: 1px solid rgba(240, 105, 15, 0.2);
+  min-width: 180px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.dropdown-content a {
+  color: var(--text-muted);
+  padding: 12px 18px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dropdown-content a:hover {
+  background-color: var(--autumn-500);
+  color: var(--text-light);
+}
+
+.sort-dropdown-wrapper:hover .dropdown-content {
+  display: block;
+}
+
+/* Explore Grid */
+.explore-section h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 28px;
+}
+
+.restaurants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 32px;
+}
+
+/* Restaurant Card */
+.restaurant-card {
+  background: var(--bg-card-dark);
+  border: 1px solid rgba(240, 105, 15, 0.06);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(240, 105, 15, 0.2);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* Image with discount banner overlay */
+.card-visual {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.card-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.restaurant-card:hover .card-visual img {
+  transform: scale(1.06);
+}
+
+.overlay-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.85) 100%);
+}
+
+.discount-banner {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* Details Section */
+.card-details {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-details h3 {
+  font-size: 18px;
+  color: var(--text-light);
+  font-weight: 700;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-details h3:hover {
+  color: var(--autumn-400);
+}
+
+.rating-time-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.rating-star {
+  color: #4ade80; /* Swiggy-like green rating star */
+}
+
+.dot-separator {
+  color: var(--text-muted);
+}
+
+.time-label {
+  color: var(--text-light);
+}
+
+.cuisines {
+  font-size: 14px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.location {
+  font-size: 13px;
+  color: var(--text-muted);
+  opacity: 0.8;
+  margin-bottom: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Action Row */
+.card-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  border-top: 1px solid rgba(240, 105, 15, 0.05);
+  padding-top: 16px;
+}
+
+.price-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.add-cart-btn {
+  background: var(--autumn-500);
+  border: none;
+  color: var(--text-light);
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(240, 105, 15, 0.25);
+}
+
+.add-cart-btn:hover {
+  background: var(--autumn-400);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(240, 105, 15, 0.4);
+}
+
+/* Empty List State */
+.empty-list-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--bg-card-dark);
+  border-radius: 20px;
+  border: 1px dashed rgba(240, 105, 15, 0.15);
+}
+
+.empty-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.empty-list-state h3 {
+  font-size: 20px;
+  color: var(--text-light);
+  margin-bottom: 8px;
+}
+
+.empty-list-state p {
+  color: var(--text-muted);
+}

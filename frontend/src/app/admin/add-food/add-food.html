@@ -1,1 +1,130 @@
-<p>add-food works!</p>
+<div class="form-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Add Gourmet Dish</h2>
+      <p>Fill in details to add a new dish to the YummyFood menu.</p>
+    </div>
+
+    @if (errorMessage) {
+      <div class="alert-error">{{ errorMessage }}</div>
+    }
+
+    <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Dish Name</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="e.g., Pumpkin Pie"
+            [class.is-invalid]="name?.invalid && name?.touched"
+          />
+          @if (name?.invalid && name?.touched) {
+            <span class="error-msg">
+              @if (name?.errors?.['required']) { Name is required. }
+              @else if (name?.errors?.['minlength']) { Name must be at least 3 characters. }
+            </span>
+          }
+        </div>
+
+        <div class="form-group price-group">
+          <label for="price">Price (₹)</label>
+          <input
+            id="price"
+            type="number"
+            formControlName="price"
+            placeholder="e.g., 299"
+            [class.is-invalid]="price?.invalid && price?.touched"
+          />
+          @if (price?.invalid && price?.touched) {
+            <span class="error-msg">
+              @if (price?.errors?.['required']) { Price is required. }
+              @else if (price?.errors?.['min']) { Price must be greater than zero. }
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="imageUrl">Image URL</label>
+          <input
+            id="imageUrl"
+            type="url"
+            formControlName="imageUrl"
+            placeholder="https://images.unsplash.com/..."
+            [class.is-invalid]="imageUrl?.invalid && imageUrl?.touched"
+          />
+          @if (imageUrl?.invalid && imageUrl?.touched) {
+            <span class="error-msg">Image URL is required.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" formControlName="category">
+            @for (cat of categories; track cat) {
+              <option [value]="cat">{{ cat }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row items-align-center">
+        <div class="form-group">
+          <label for="dateOfLaunch">Launch Date</label>
+          <input
+            id="dateOfLaunch"
+            type="date"
+            formControlName="dateOfLaunch"
+            [class.is-invalid]="dateOfLaunch?.invalid && dateOfLaunch?.touched"
+          />
+          @if (dateOfLaunch?.invalid && dateOfLaunch?.touched) {
+            <span class="error-msg">Launch Date is required.</span>
+          }
+        </div>
+
+        <div class="checkboxes-wrapper">
+          <label class="custom-checkbox">
+            <input type="checkbox" formControlName="active" />
+            <span class="checkmark"></span>
+            Make Active (Show in menu)
+          </label>
+
+          <label class="custom-checkbox">
+            <input type="checkbox" formControlName="freeDelivery" />
+            <span class="checkmark"></span>
+            Free Delivery
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="4"
+          placeholder="Describe the dish ingredients, preparation, and taste profile..."
+          [class.is-invalid]="description?.invalid && description?.touched"
+        >
+        </textarea>
+        @if (description?.invalid && description?.touched) {
+          <span class="error-msg">
+            @if (description?.errors?.['required']) { Description is required. }
+            @else if (description?.errors?.['minlength']) { Description must be at least 10 characters long. }
+          </span>
+        }
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/admin" class="btn-cancel">Cancel</a>
+        <button type="submit" [disabled]="isLoading" class="btn-submit">
+          @if (isLoading) { Adding Dish... }
+          @else { Add Dish }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

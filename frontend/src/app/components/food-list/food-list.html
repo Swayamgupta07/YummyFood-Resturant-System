@@ -1,1 +1,111 @@
-<p>food-list works!</p>
+<div class="category-page-container">
+  <!-- Back navigation breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/home">Home</a> / <span class="active-crumb">{{ categoryName }}</span>
+  </div>
+
+  <!-- Category Title & Description -->
+  <header class="category-header">
+    <h1>{{ categoryName }}</h1>
+    <p>{{ categoryDescription }}</p>
+  </header>
+
+  <!-- Filter & Sort Toolbar -->
+  <div class="filter-toolbar">
+    <button class="filter-btn select-filter" [class.filter-active]="vegOnly || highRatedOnly || freeDeliveryOnly">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-svg">
+        <line x1="4" y1="21" x2="4" y2="14"></line>
+        <line x1="4" y1="10" x2="4" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12" y2="3"></line>
+        <line x1="20" y1="21" x2="20" y2="16"></line>
+        <line x1="20" y1="12" x2="20" y2="3"></line>
+        <line x1="1" y1="14" x2="7" y2="14"></line>
+        <line x1="9" y1="8" x2="15" y2="8"></line>
+        <line x1="17" y1="16" x2="23" y2="16"></line>
+      </svg>
+      Filter
+    </button>
+
+    <!-- Sort Dropdown -->
+    <div class="sort-dropdown-wrapper">
+      <button class="filter-btn">
+        Sort By: <strong>{{ activeSort }}</strong>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="chevron-svg">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="dropdown-content">
+        <a (click)="changeSort('Relevance')">Relevance</a>
+        <a (click)="changeSort('Price: Low to High')">Price: Low to High</a>
+        <a (click)="changeSort('Price: High to Low')">Price: High to Low</a>
+      </div>
+    </div>
+
+    <!-- Filter Pills -->
+    <button class="filter-btn pill" [class.active-pill]="vegOnly" (click)="toggleVeg()">
+      Veg/Non-Veg
+    </button>
+
+    <button class="filter-btn pill" [class.active-pill]="highRatedOnly" (click)="toggleHighRated()">
+      Ratings 4.5+
+    </button>
+
+    <button class="filter-btn pill" [class.active-pill]="freeDeliveryOnly" (click)="toggleFreeDelivery()">
+      Free Delivery
+    </button>
+  </div>
+
+  <!-- Grid Items Section -->
+  <main class="explore-section">
+    <h2>Restaurants to explore</h2>
+
+    <div class="restaurants-grid">
+      @for (food of filteredFoods; track food.id) {
+        <div class="restaurant-card">
+          <!-- Card Visual with dynamic discount banners -->
+          <div class="card-visual">
+            <img [src]="food.imageUrl" [alt]="food.name" />
+            <div class="overlay-gradient"></div>
+            
+            <!-- Dynamic Swiggy Discount Overlay -->
+            @if (food.price > 200) {
+              <div class="discount-banner">₹100 OFF ABOVE ₹999</div>
+            } @else if (food.price < 180) {
+              <div class="discount-banner">ITEMS AT ₹43</div>
+            } @else {
+              <div class="discount-banner">₹75 OFF ABOVE ₹169</div>
+            }
+          </div>
+
+          <!-- Card Content -->
+          <div class="card-details">
+            <h3 [routerLink]="['/food', food.id]">{{ food.name }}</h3>
+            
+            <div class="rating-time-row">
+              <span class="rating-star">★ 4.5</span>
+              <span class="dot-separator">•</span>
+              <span class="time-label">35-40 mins</span>
+            </div>
+
+            <p class="cuisines">{{ food.category }}, Gourmet Bites</p>
+            <p class="location">Ashok Nagar, Swaroop Nagar</p>
+
+            <div class="card-action-row">
+              <span class="price-label">₹{{ food.price.toFixed(0) }} for one</span>
+              <button class="add-cart-btn" (click)="addToCart(food)">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="empty-list-state">
+          <span class="empty-icon">🔍</span>
+          <h3>No items match your filters</h3>
+          <p>Try resetting some options to explore more dishes.</p>
+        </div>
+      }
+    </div>
+  </main>
+</div>

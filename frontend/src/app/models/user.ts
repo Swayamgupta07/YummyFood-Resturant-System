@@ -1,21 +1,22 @@
 export interface User {
-  id?: number;
+  id?: string;
+  _id?: string;
   name: string;
-  email: string;
-  password?: string;
+  email?: string;
+  phone?: string;
   role?: 'CUSTOMER' | 'ADMIN';
-  token?: string;
 }
 
 export interface LoginRequest {
   email: string;
-  password: string;
+  password?: string;
 }
 
 export interface RegisterRequest {
   name: string;
-  email: string;
-  password: string;
+  email?: string;
+  phone?: string;
+  password?: string;
   role?: 'CUSTOMER' | 'ADMIN';
 }
 

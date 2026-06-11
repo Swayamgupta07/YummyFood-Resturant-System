@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { AuthResponse, LoginRequest, RegisterRequest } from '../models/user';
@@ -9,7 +9,8 @@ import { AuthResponse, LoginRequest, RegisterRequest } from '../models/user';
 export class Auth {
   private apiUrl = 'http://localhost:5000/api/auth';
 
-  constructor( private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
+
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((res: AuthResponse) => {
@@ -21,6 +22,19 @@ export class Auth {
 
   register(data: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
+      tap((res: AuthResponse) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(res.user));
+      })
+    );
+  }
+
+  sendOtp(phone: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/send-otp`, { phone });
+  }
+
+  verifyOtp(phone: string, otp: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/verify-otp`, { phone, otp }).pipe(
       tap((res: AuthResponse) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));

@@ -78,6 +78,7 @@ export class FoodService {
     }
   ];
 
+  constructor(private http: HttpClient) {}
 
   getMenuItems(): Observable<Food[]> {
     return of(this.mockFoods);
@@ -97,11 +98,24 @@ export class FoodService {
     return of(filtered);
   }
 
+  addMenuItem(food: Food): Observable<Food> {
+    const nextId = this.mockFoods.length > 0 ? Math.max(...this.mockFoods.map(f => f.id)) + 1 : 1;
+    const newFood = { ...food, id: nextId };
+    this.mockFoods.push(newFood);
+    return of(newFood);
+  }
+
   updateMenuItem(food: Food): Observable<Food> {
     const index = this.mockFoods.findIndex(f => f.id === food.id);
     if (index > -1) {
       this.mockFoods[index] = food;
     }
     return of(food);
+  }
+
+  deleteMenuItem(id: number): Observable<boolean> {
+    const initialLength = this.mockFoods.length;
+    this.mockFoods = this.mockFoods.filter(f => f.id !== id);
+    return of(this.mockFoods.length < initialLength);
   }
 }

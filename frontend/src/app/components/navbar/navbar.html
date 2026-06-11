@@ -6,7 +6,7 @@
 
     <nav class="nav-links">
       <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-      <a routerLink="/home" routerLinkActive="active">Menu</a>
+      <a (click)="scrollToMenu()" style="cursor: pointer;">Menu</a>
       <a routerLink="/order-history" routerLinkActive="active">Orders</a>
       @if (user?.role === 'ADMIN') {
         <a routerLink="/admin" routerLinkActive="active" class="admin-badge">Admin Panel</a>

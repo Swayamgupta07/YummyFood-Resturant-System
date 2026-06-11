@@ -20,6 +20,17 @@ export class Navbar {
     return this.auth.getCurrentUser();
   }
 
+  scrollToMenu() {
+    this.router.navigate(['/home']).then(() => {
+      setTimeout(() => {
+        const element = document.getElementById('menu');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    });
+  }
+
   logout() {
     this.auth.logout();
     this.cart.clearCart();

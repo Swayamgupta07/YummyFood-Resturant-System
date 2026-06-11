@@ -41,6 +41,29 @@
         }
       </div>
 
+      <!-- Phone Field -->
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <div class="input-wrapper">
+          <span class="prefix">+91</span>
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            placeholder="Enter 10-digit number"
+            [class.is-invalid]="phone?.invalid && phone?.touched"
+          />
+        </div>
+        @if (phone?.invalid && phone?.touched) {
+          <span class="error-msg">
+            @if (phone?.errors?.['required']) { Phone number is required. }
+            @else if (phone?.errors?.['pattern']) { Enter a valid 10-digit phone number. }
+          </span>
+        }
+      </div>
+
+
+
       <!-- Password Field -->
       <div class="form-group">
         <label for="password">Password</label>

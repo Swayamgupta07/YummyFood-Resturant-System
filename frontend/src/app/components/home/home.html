@@ -1,16 +1,14 @@
 <div class="home-container">
-  <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-content">
-      <div class="badge-seasonal">
-        <span class="emoji">🍁</span> Autumn Season Specials
-      </div>
+      <div class="badge-seasonal"><span class="emoji">☀️</span> Summer Season Special</div>
       <h1 class="hero-title">
         Savor the Warmth of <br />
-        <span>Autumn Flavors</span>
+        <span>Summer Flavors</span>
       </h1>
       <p class="hero-desc">
-        Experience hand-picked seasonal ingredients crafted into exquisite culinary masterpieces. From our kitchen to your doorstep, warm and fresh.
+        Experience hand-picked seasonal ingredients crafted into exquisite culinary masterpieces.
+        From our kitchen to your doorstep, warm and fresh.
       </p>
       <div class="hero-ctas">
         <a href="#menu" class="btn-primary">Explore Menu</a>
@@ -33,18 +31,48 @@
     </div>
     <div class="hero-visual">
       <div class="image-wrapper">
-        <img src="https://www.shutterstock.com/image-photo/traditional-indian-thali-full-meal-600nw-2773571235.jpg" alt="Autumn Special Steak" class="hero-food-img" />
-        <div class="floating-badge badge-1">
-          <span class="emoji">🔥</span> Hot & Fresh
-        </div>
-        <div class="floating-badge badge-2">
-          <span class="emoji">⭐</span> Chef Choice
-        </div>
+        <img
+          src="https://www.shutterstock.com/image-photo/traditional-indian-thali-full-meal-600nw-2773571235.jpg"
+          alt="Special Steak"
+          class="hero-food-img"
+        />
+        <div class="floating-badge badge-1"><span class="emoji">🔥</span> Hot & Fresh</div>
+        <div class="floating-badge badge-2"><span class="emoji">⭐</span> Chef Choice</div>
       </div>
     </div>
   </section>
 
-  <!-- Info Cards Section -->
+  <section class="swiggy-categories-section">
+    <div class="section-header-left">
+      <h2>Order our best food options</h2>
+      <div class="slider-arrows">
+        <button class="arrow-btn btn-left" (click)="scrollCategories(-200)" aria-label="Scroll left">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="arrow-svg">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <button class="arrow-btn btn-right" (click)="scrollCategories(200)" aria-label="Scroll right">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="arrow-svg">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="categories-scroll-container" id="categories-scroll">
+      @for (cat of swiggyCategories; track cat.name) {
+        <div class="category-circle-card" [routerLink]="['/category', cat.name]">
+          <div class="circle-image-wrapper">
+            <img [src]="cat.image" [alt]="cat.name" />
+          </div>
+          <span class="category-name-label">{{ cat.name }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
   <section class="info-section">
     <div class="info-card">
       <div class="info-icon">🍳</div>
@@ -63,15 +91,13 @@
     </div>
   </section>
 
-  <!-- Menu Section -->
   <section id="menu" class="menu-section">
     <div class="section-header">
       <span class="subtitle">Our Offerings</span>
       <h2>Browse Our Gourmets</h2>
-      <p>Filter by categories or search for your favorite autumn delicacies.</p>
+      <p>Filter by categories or search for your favorite Summer delicacies.</p>
     </div>
 
-    <!-- Search & Filter Controls -->
     <div class="menu-controls">
       <div class="category-pills">
         @for (category of categories; track category) {
@@ -86,7 +112,16 @@
       </div>
 
       <div class="search-box">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="search-icon"
+        >
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
@@ -99,7 +134,6 @@
       </div>
     </div>
 
-    <!-- Food Items Grid -->
     <div class="food-grid">
       @for (food of filteredItems; track food.id) {
         <div class="food-card">
@@ -119,7 +153,16 @@
             <div class="card-footer-row">
               <span class="price">₹{{ food.price.toFixed(2) }}</span>
               <button (click)="addToCart(food)" class="add-to-cart-btn" aria-label="Add to cart">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="plus-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="plus-icon"
+                >
                   <line x1="12" y1="5" x2="12" y2="19"></line>
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
