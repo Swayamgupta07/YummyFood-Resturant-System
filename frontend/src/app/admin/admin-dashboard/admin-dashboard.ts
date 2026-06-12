@@ -6,6 +6,7 @@ import { FoodService } from '../../services/food/food';
 import { Food } from '../../models/food/food';
 import { Order } from '../../models/order/order';
 import { Navbar } from '../../components/navbar/navbar';
+import { ORDER_STATUSES } from '../../constants/constants';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -23,7 +24,7 @@ export class AdminDashboard implements OnInit {
   isLoadingFoods = true;
   activeTab: 'orders' | 'foods' = 'orders';
 
-  statusOptions = ['PLACED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED'];
+  statusOptions = ORDER_STATUSES;
 
   constructor(
     private orderService: OrderService,

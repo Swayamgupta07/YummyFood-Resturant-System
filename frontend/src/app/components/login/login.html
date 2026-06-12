@@ -4,16 +4,24 @@
     <div class="auth-header">
       <div class="auth-logo">🍽️</div>
       <h1 class="auth-title">Welcome Back</h1>
-      <p class="auth-sub">Login to your YumFood account</p>
+      <p class="auth-sub">Login to your TruYum account</p>
     </div>
 
     <div class="auth-tabs">
-      <button class="tab-btn" [class.active]="loginMode === 'email'" (click)="setMode('email')"> Email</button>
-      <button class="tab-btn" [class.active]="loginMode === 'otp'" (click)="setMode('otp')">Phone OTP</button>
+      <button class="tab-btn" [class.active]="loginMode === 'email'" (click)="setMode('email')">
+        Email
+      </button>
+      <button class="tab-btn" [class.active]="loginMode === 'otp'" (click)="setMode('otp')">
+        Phone OTP
+      </button>
     </div>
 
-    @if (errorMsg) { <div class="alert-error">{{ errorMsg }}</div> }
-    @if (successMsg) { <div class="alert-success">{{ successMsg }}</div> }
+    @if (errorMsg) {
+      <div class="alert-error">{{ errorMsg }}</div>
+    }
+    @if (successMsg) {
+      <div class="alert-success">{{ successMsg }}</div>
+    }
 
     @if (loginMode === 'email') {
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
@@ -53,7 +61,12 @@
           }
         </div>
 
-        <button id="login-submit" type="submit" class="btn-primary submit-btn" [disabled]="isLoading">
+        <button
+          id="login-submit"
+          type="submit"
+          class="btn-primary submit-btn"
+          [disabled]="isLoading"
+        >
           {{ isLoading ? 'Logging in...' : 'Login' }}
         </button>
       </form>
@@ -61,7 +74,6 @@
 
     @if (loginMode === 'otp') {
       <form [formGroup]="phoneForm" (submit)="$event.preventDefault()" class="auth-form">
-
         <div class="form-group">
           <label for="login-phone">Phone Number</label>
           <div class="input-with-action">
@@ -76,7 +88,12 @@
               [readonly]="otpSent"
             />
             @if (!otpSent) {
-              <button type="button" class="btn-send-otp" (click)="sendOtp()" [disabled]="isLoading || phone?.invalid">
+              <button
+                type="button"
+                class="btn-send-otp"
+                (click)="sendOtp()"
+                [disabled]="isLoading || phone?.invalid"
+              >
                 Send OTP
               </button>
             }
@@ -107,20 +124,24 @@
             @if (otp?.errors?.['pattern'] && otp?.touched) {
               <span class="error-msg">Enter a 4-digit numeric OTP</span>
             }
-            <span class="change-phone-link" (click)="otpSent = false; successMsg = '';">
+            <span class="change-phone-link" (click)="otpSent = false; successMsg = ''">
               ✏️ Change phone number
             </span>
           </div>
 
-          <button id="otp-verify-submit" type="button" class="btn-primary submit-btn" (click)="verifyOtp()" [disabled]="isLoading || phoneForm.invalid">
+          <button
+            id="otp-verify-submit"
+            type="button"
+            class="btn-primary submit-btn"
+            (click)="verifyOtp()"
+            [disabled]="isLoading || phoneForm.invalid"
+          >
             {{ isLoading ? 'Verifying...' : ' Verify & Login' }}
           </button>
         }
       </form>
     }
 
-    <p class="auth-switch">
-      Don't have an account? <a routerLink="/register">Sign up here</a>
-    </p>
+    <p class="auth-switch">Don't have an account? <a routerLink="/register">Sign up here</a></p>
   </div>
 </div>

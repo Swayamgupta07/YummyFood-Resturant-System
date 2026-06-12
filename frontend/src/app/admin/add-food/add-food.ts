@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { FoodService } from '../../services/food/food';
 import { Navbar } from '../../components/navbar/navbar';
+import { FOOD_CATEGORIES } from '../../constants/constants';
 
 @Component({
   selector: 'app-add-food',
@@ -18,7 +19,7 @@ export class AddFood {
   selectedFile: File | null = null;
   previewUrl: string | null = null;
 
-  categories = ['Pizza', 'North Indian', 'Biryani', 'Burger', 'South Indian', 'Desserts', 'Cake', 'Noodles', 'Rolls', 'Ice Cream', 'Coffee', 'Pasta'];
+  categories = FOOD_CATEGORIES;
 
   constructor(private fb: FormBuilder, private foodService: FoodService, private router: Router) {
     this.foodForm = this.fb.group({

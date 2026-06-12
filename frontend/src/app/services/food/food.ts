@@ -19,6 +19,12 @@ export class FoodService {
     );
   }
 
+  getCategories(): Observable<any[]> {
+    return this.http.get('http://localhost:5000/api/categories').pipe(
+      map((res: any) => res.data.categories)
+    );
+  }
+
   getFoodById(id: string): Observable<Food> {
     return this.http.get(`${this.apiUrl}/${id}`).pipe(
       map((res: any) => res.data.food as Food)

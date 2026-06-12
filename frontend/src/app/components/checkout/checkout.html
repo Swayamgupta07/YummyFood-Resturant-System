@@ -84,17 +84,17 @@
               }
             </div>
 
-            <div class="checkbox-group" style="margin-top: 12px; margin-bottom: 8px;">
-              <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; cursor: pointer;">
-                <input type="checkbox" formControlName="saveToProfile" style="cursor: pointer; accent-color: var(--Summer-500);" /> Save this address to my profile
+            <div class="save-address-checkbox-wrapper">
+              <label class="save-address-label">
+                <input type="checkbox" formControlName="saveToProfile" class="save-address-input" /> Save this address to my profile
               </label>
             </div>
           </form>
         }
 
-        <form [formGroup]="addressForm" (ngSubmit)="placeOrder()" class="checkout-submit-form" style="margin-top: 32px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 24px;">
+        <form [formGroup]="addressForm" (ngSubmit)="placeOrder()" class="checkout-submit-form">
           <div class="form-group">
-            <label class="section-title" style="margin-bottom: 16px; font-size: 18px; font-weight: 600; display: block; color: var(--text-light);">Payment Method</label>
+            <label class="payment-title">Payment Method</label>
             <div class="payment-options">
               <label class="payment-option">
                 <input type="radio" formControlName="paymentMethod" value="COD" /> Cash on Delivery
@@ -105,7 +105,7 @@
             </div>
           </div>
 
-          <button id="place-order-btn" type="submit" class="btn-primary place-btn" [disabled]="isLoading" style="width: 100%; margin-top: 24px; padding: 14px;">
+          <button id="place-order-btn" type="submit" class="btn-primary place-btn" [disabled]="isLoading">
             {{ isLoading ? 'Placing Order...' : 'Place Order' }}
           </button>
         </form>
@@ -126,20 +126,20 @@
           }
         </div>
         <div class="summary-divider"></div>
-        <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-muted); font-size: 14px;">
+        <div class="summary-row subtotal-row">
           <span>Items Subtotal</span>
           <span>₹{{ totalPrice() }}</span>
         </div>
-        <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 16px; color: var(--text-muted); font-size: 14px;">
+        <div class="summary-row delivery-row">
           <span>Delivery Charge</span>
           @if (deliveryCharge() === 0) {
-            <span style="color: #2ecc71; font-weight: 700;">FREE</span>
+            <span class="free-delivery-badge-text">FREE</span>
           } @else {
             <span>₹{{ deliveryCharge() }}</span>
           }
         </div>
-        <div class="summary-divider" style="height: 1px; background: rgba(255, 255, 255, 0.08); margin-bottom: 16px;"></div>
-        <div class="summary-total" style="display: flex; justify-content: space-between; font-size: 20px; font-weight: 700; color: var(--text-light);">
+        <div class="summary-divider total-divider"></div>
+        <div class="summary-total">
           <span>Grand Total</span>
           <span>₹{{ grandTotal() }}</span>
         </div>

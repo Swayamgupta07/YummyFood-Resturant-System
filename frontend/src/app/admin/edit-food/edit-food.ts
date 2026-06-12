@@ -4,6 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { FoodService } from '../../services/food/food';
 import { Food } from '../../models/food/food';
 import { Navbar } from '../../components/navbar/navbar';
+import { FOOD_CATEGORIES } from '../../constants/constants';
 
 @Component({
   selector: 'app-edit-food',
@@ -20,7 +21,7 @@ export class EditFood implements OnInit {
   foodId = '';
   selectedFile: File | null = null;
   previewUrl: string | null = null;
-  categories = ['Pizza', 'North Indian', 'Biryani', 'Burger', 'South Indian', 'Desserts', 'Cake', 'Noodles', 'Rolls', 'Ice Cream', 'Coffee', 'Pasta'];
+  categories = FOOD_CATEGORIES;
 
   constructor(
     private fb: FormBuilder,
