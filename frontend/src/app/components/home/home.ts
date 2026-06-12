@@ -5,6 +5,7 @@ import { FoodService } from '../../services/food/food';
 import { CartService } from '../../services/cart/cart';
 import { Food } from '../../models/food/food';
 import { Navbar } from '../navbar/navbar';
+import { SYSTEM_IMAGES } from '../../constants/constants';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ export class Home implements OnInit {
   searchQuery: string = '';
 
   swiggyCategories: any[] = [];
+  systemImages = SYSTEM_IMAGES;
 
   constructor(
     private foodService: FoodService,

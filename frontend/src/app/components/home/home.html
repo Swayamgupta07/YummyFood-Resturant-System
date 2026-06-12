@@ -33,7 +33,7 @@
     <div class="hero-visual">
       <div class="image-wrapper">
         <img
-          src="https://www.shutterstock.com/image-photo/traditional-indian-thali-full-meal-600nw-2773571235.jpg"
+          [src]="systemImages.HERO_FOOD"
           alt="Special Steak"
           class="hero-food-img"
         />
@@ -74,21 +74,33 @@
     </div>
   </section>
 
-  <section class="info-section">
+  <section id="about" class="info-section">
     <div class="info-card">
-      <div class="info-icon">🍳</div>
-      <h3>Premium Chefs</h3>
-      <p>Prepared by award winning culinary professionals using refined traditional recipes.</p>
+      <img [src]="systemImages.INFO_CHEFS" alt="Premium Chefs" class="info-card-img" />
+      <div class="info-card-overlay">
+        <div class="info-card-content">
+          <h3>Premium Chefs</h3>
+          <p>Prepared by award winning culinary professionals using refined traditional recipes.</p>
+        </div>
+      </div>
     </div>
     <div class="info-card">
-      <div class="info-icon">🥕</div>
-      <h3>Fresh Harvest</h3>
-      <p>100% organic, handpicked vegetables and farm-fresh ingredients for rich nutrition.</p>
+      <img [src]="systemImages.INFO_HARVEST" alt="Fresh Harvest" class="info-card-img" />
+      <div class="info-card-overlay">
+        <div class="info-card-content">
+          <h3>Fresh Harvest</h3>
+          <p>100% organic, handpicked vegetables and farm-fresh ingredients for rich nutrition.</p>
+        </div>
+      </div>
     </div>
     <div class="info-card">
-      <div class="info-icon">🛵</div>
-      <h3>Swift Delivery</h3>
-      <p>Our dedicated delivery champions ensure your food arrives hot, fresh and on time.</p>
+      <img [src]="systemImages.INFO_DELIVERY" alt="Swift Delivery" class="info-card-img" />
+      <div class="info-card-overlay">
+        <div class="info-card-content">
+          <h3>Swift Delivery</h3>
+          <p>Our dedicated delivery champions ensure your food arrives hot, fresh and on time.</p>
+        </div>
+      </div>
     </div>
   </section>
 
