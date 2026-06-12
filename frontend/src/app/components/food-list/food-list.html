@@ -73,7 +73,7 @@
       <div class="restaurants-grid">
         @for (food of filteredFoods; track food._id) {
           <div class="restaurant-card" [class.out-of-stock]="!food.active" [appTooltip]="!food.active ? 'This item is currently out of stock' : ''">
-            <div class="card-visual" [routerLink]="['/food', food._id]" style="cursor: pointer;">
+            <div class="card-visual" [routerLink]="['/food', food.name | slugify]" style="cursor: pointer;">
               <img [src]="food.imageUrl | imageUrl" [alt]="food.name" />
               <div class="overlay-gradient"></div>
 
@@ -91,10 +91,10 @@
             </div>
 
             <div class="card-details">
-              <h3 [routerLink]="['/food', food._id]">{{ food.name }}</h3>
+              <h3 [routerLink]="['/food', food.name | slugify]">{{ food.name }}</h3>
 
               <div class="rating-time-row">
-                <span class="rating-star" [routerLink]="['/food', food._id]" style="cursor: pointer;" [appTooltip]="(food.rating && food.rating > 0) ? 'Average customer rating: ' + food.rating : 'No reviews yet'">★ {{ (food.rating && food.rating > 0) ? food.rating : 'New' }}</span>
+                <span class="rating-star" [routerLink]="['/food', food.name | slugify]" style="cursor: pointer;" [appTooltip]="(food.rating && food.rating > 0) ? 'Average customer rating: ' + food.rating : 'No reviews yet'">★ {{ (food.rating && food.rating > 0) ? food.rating : 'New' }}</span>
                 <span class="dot-separator">•</span>
                 <span class="time-label">35-40 mins</span>
               </div>

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Food = require('../models/Food');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
@@ -25,9 +26,18 @@ exports.getAllFoods = catchAsync(async (req, res, next) => {
 });
 
 exports.getFoodById = catchAsync(async (req, res, next) => {
-  const food = await Food.findById(req.params.id);
+  let food;
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+    food = await Food.findById(req.params.id);
+  } else {
+    const searchPattern = req.params.id.split('-').join('[- ]');
+    food = await Food.findOne({
+      name: { $regex: new RegExp(`^${searchPattern}$`, 'i') }
+    });
+  }
+
   if (!food) {
-    return next(new AppError('No food item found with that ID', 404));
+    return next(new AppError('No food item found with that ID or name', 404));
   }
 
   res.status(200).json({

@@ -13,7 +13,6 @@
       </p>
       <div class="hero-ctas">
         <a href="#menu" class="btn-primary">Explore Menu</a>
-        <a href="#about" class="btn-secondary">Learn More</a>
       </div>
       <div class="hero-stats">
         <div class="stat-item">
@@ -165,7 +164,7 @@
       <div class="food-grid">
         @for (food of filteredItems; track food._id) {
           <div class="food-card" [class.out-of-stock]="!food.active" [appTooltip]="!food.active ? 'This item is currently out of stock' : ''">
-            <div class="card-image" [routerLink]="['/food', food._id]" style="cursor: pointer;">
+            <div class="card-image" [routerLink]="['/food', food.name | slugify]" style="cursor: pointer;">
               <img [src]="food.imageUrl | imageUrl" [alt]="food.name" />
               <span class="card-category">{{ food.category }}</span>
               @if (food.freeDelivery) {
@@ -177,8 +176,8 @@
             </div>
             <div class="card-body">
               <div class="card-header-row">
-                <h3 [routerLink]="['/food', food._id]">{{ food.name }}</h3>
-                <span class="rating" [routerLink]="['/food', food._id]" style="cursor: pointer;" [appTooltip]="(food.rating && food.rating > 0) ? 'Average customer rating: ' + food.rating : 'No reviews yet'">{{ (food.rating && food.rating > 0) ? food.rating + ' ★' : '★ New' }}</span>
+                <h3 [routerLink]="['/food', food.name | slugify]">{{ food.name }}</h3>
+                <span class="rating" [routerLink]="['/food', food.name | slugify]" style="cursor: pointer;" [appTooltip]="(food.rating && food.rating > 0) ? 'Average customer rating: ' + food.rating : 'No reviews yet'">{{ (food.rating && food.rating > 0) ? food.rating + ' ★' : '★ New' }}</span>
               </div>
               <p class="description">{{ food.description }}</p>
               <div class="card-footer-row">

@@ -3,13 +3,13 @@
     <div class="toast-card" [ngClass]="toast.type" (click)="toastService.remove(toast.id)">
       <div class="toast-icon">
         @if (toast.type === 'success') {
-          <span>✅</span>
+          <i class="bi bi-check"></i>
         } @else if (toast.type === 'error') {
-          <span>❌</span>
+          <i class="bi bi-x-square-fill"></i>
         } @else if (toast.type === 'warning') {
-          <span>⚠️</span>
+          <i class="bi bi-exclamation-triangle"></i>
         } @else {
-          <span>ℹ️</span>
+          <i class="bi bi-info-circle"></i>
         }
       </div>
       <div class="toast-message">{{ toast.message }}</div>

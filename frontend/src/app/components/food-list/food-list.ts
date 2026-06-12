@@ -8,11 +8,12 @@ import { Navbar } from '../navbar/navbar';
 import { ImageUrlPipe } from '../../pipes/image-url/image-url';
 import { TooltipDirective } from '../../directives/tooltip/tooltip';
 import { ToastService } from '../../services/toast/toast';
+import { SlugifyPipe } from '../../pipes/slugify/slugify';
 
 @Component({
   selector: 'app-food-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, Navbar, ImageUrlPipe, TooltipDirective],
+  imports: [RouterLink, CommonModule, Navbar, ImageUrlPipe, TooltipDirective, SlugifyPipe],
   templateUrl: './food-list.html',
   styleUrl: './food-list.css',
 })

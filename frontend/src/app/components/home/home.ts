@@ -9,11 +9,12 @@ import { SYSTEM_IMAGES } from '../../constants/constants';
 import { ImageUrlPipe } from '../../pipes/image-url/image-url';
 import { TooltipDirective } from '../../directives/tooltip/tooltip';
 import { ToastService } from '../../services/toast/toast';
+import { SlugifyPipe } from '../../pipes/slugify/slugify';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, FormsModule, Navbar, ImageUrlPipe, TooltipDirective],
+  imports: [RouterLink, FormsModule, Navbar, ImageUrlPipe, TooltipDirective, SlugifyPipe],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
