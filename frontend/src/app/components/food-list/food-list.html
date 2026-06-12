@@ -1,16 +1,14 @@
+<app-navbar></app-navbar>
 <div class="category-page-container">
-  <!-- Back navigation breadcrumb -->
   <div class="breadcrumb">
     <a routerLink="/home">Home</a> / <span class="active-crumb">{{ categoryName }}</span>
   </div>
 
-  <!-- Category Title & Description -->
   <header class="category-header">
     <h1>{{ categoryName }}</h1>
     <p>{{ categoryDescription }}</p>
   </header>
 
-  <!-- Filter & Sort Toolbar -->
   <div class="filter-toolbar">
     <button class="filter-btn select-filter" [class.filter-active]="vegOnly || highRatedOnly || freeDeliveryOnly">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="filter-svg">
@@ -27,7 +25,6 @@
       Filter
     </button>
 
-    <!-- Sort Dropdown -->
     <div class="sort-dropdown-wrapper">
       <button class="filter-btn">
         Sort By: <strong>{{ activeSort }}</strong>
@@ -42,7 +39,6 @@
       </div>
     </div>
 
-    <!-- Filter Pills -->
     <button class="filter-btn pill" [class.active-pill]="vegOnly" (click)="toggleVeg()">
       Veg/Non-Veg
     </button>
@@ -56,46 +52,50 @@
     </button>
   </div>
 
-  <!-- Grid Items Section -->
   <main class="explore-section">
     <h2>Restaurants to explore</h2>
 
     <div class="restaurants-grid">
-      @for (food of filteredFoods; track food.id) {
-        <div class="restaurant-card">
-          <!-- Card Visual with dynamic discount banners -->
-          <div class="card-visual">
-            <img [src]="food.imageUrl" [alt]="food.name" />
+      @for (food of filteredFoods; track food._id) {
+        <div class="restaurant-card" [class.out-of-stock]="!food.active">
+          <div class="card-visual" [routerLink]="['/food', food._id]" style="cursor: pointer;">
+            <img [src]="(food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + food.imageUrl : food.imageUrl" [alt]="food.name" />
             <div class="overlay-gradient"></div>
-            
-            <!-- Dynamic Swiggy Discount Overlay -->
-            @if (food.price > 200) {
-              <div class="discount-banner">₹100 OFF ABOVE ₹999</div>
-            } @else if (food.price < 180) {
-              <div class="discount-banner">ITEMS AT ₹43</div>
+
+            @if (food.active) {
+              @if (food.price > 200) {
+                <div class="discount-banner">₹100 OFF ABOVE ₹999</div>
+              } @else if (food.price < 180) {
+                <div class="discount-banner">ITEMS AT ₹43</div>
+              } @else {
+                <div class="discount-banner">₹75 OFF ABOVE ₹169</div>
+              }
             } @else {
-              <div class="discount-banner">₹75 OFF ABOVE ₹169</div>
+              <div class="out-of-stock-overlay">Out of Stock</div>
             }
           </div>
 
-          <!-- Card Content -->
           <div class="card-details">
-            <h3 [routerLink]="['/food', food.id]">{{ food.name }}</h3>
-            
+            <h3 [routerLink]="['/food', food._id]">{{ food.name }}</h3>
+
             <div class="rating-time-row">
-              <span class="rating-star">★ 4.5</span>
+              <span class="rating-star" [routerLink]="['/food', food._id]" style="cursor: pointer;">★ {{ (food.rating && food.rating > 0) ? food.rating : 'New' }}</span>
               <span class="dot-separator">•</span>
               <span class="time-label">35-40 mins</span>
             </div>
 
             <p class="cuisines">{{ food.category }}, Gourmet Bites</p>
-            <p class="location">Ashok Nagar, Swaroop Nagar</p>
+            <p class="location">Kalyanpur, Kanpur</p>
 
             <div class="card-action-row">
               <span class="price-label">₹{{ food.price.toFixed(0) }} for one</span>
-              <button class="add-cart-btn" (click)="addToCart(food)">
-                Add to Cart
-              </button>
+              @if (food.active) {
+                <button class="add-cart-btn" (click)="addToCart(food)">
+                  Add to Cart
+                </button>
+              } @else {
+                <span class="out-of-stock-label">Out of Stock</span>
+              }
             </div>
           </div>
         </div>

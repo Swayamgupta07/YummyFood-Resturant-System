@@ -1,1 +1,64 @@
-<p>cart works!</p>
+<app-navbar></app-navbar>
+<div class="page-section">
+  <div class="container">
+    <h1 class="page-title">🛒 Your Cart</h1>
+
+    @if (items().length === 0) {
+      <div class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <h2>Your cart is empty</h2>
+        <p>Looks like you haven't added anything yet!</p>
+        <a routerLink="/home" class="btn-primary">Browse Menu</a>
+      </div>
+    }
+
+    @if (items().length > 0) {
+      <div class="cart-layout">
+        <div class="cart-items">
+          @for (item of items(); track item.food._id) {
+            <div class="cart-item">
+              <img [src]="(item.food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + item.food.imageUrl : item.food.imageUrl" [alt]="item.food.name" class="item-img" />
+              <div class="item-info">
+                <p class="item-category">{{ item.food.category }}</p>
+                <h3 class="item-name">{{ item.food.name }}</h3>
+                <p class="item-price">₹{{ item.food.price }} each</p>
+              </div>
+              <div class="qty-control">
+                <button class="qty-btn" (click)="updateQty(item.food._id!, item.quantity - 1)">−</button>
+                <span class="qty-value">{{ item.quantity }}</span>
+                <button class="qty-btn" (click)="updateQty(item.food._id!, item.quantity + 1)">+</button>
+              </div>
+              <div class="item-total">₹{{ item.food.price * item.quantity }}</div>
+              <button class="remove-btn" (click)="remove(item.food._id!)" title="Remove">✕</button>
+            </div>
+          }
+          <button class="clear-btn" (click)="clearCart()">Clear Cart</button>
+        </div>
+
+        <div class="cart-summary">
+          <h2 class="summary-title">Order Summary</h2>
+          <div class="summary-row">
+            <span>Items ({{ totalCount() }})</span>
+            <span>₹{{ totalPrice() }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Delivery</span>
+            @if (deliveryCharge() === 0) {
+              <span class="free-text">FREE</span>
+            } @else {
+              <span>₹{{ deliveryCharge() }}</span>
+            }
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span>₹{{ grandTotal() }}</span>
+          </div>
+          <button id="checkout-btn" class="btn-primary checkout-btn" (click)="goToCheckout()">
+            Proceed to Checkout →
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,148 +1,113 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthResponse } from '../../models/user';
-import { Auth } from '../../services/auth';
+import { Auth } from '../../services/auth/auth';
+import { Navbar } from '../navbar/navbar';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [ReactiveFormsModule, FormsModule, RouterLink, Navbar],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
   loginForm: FormGroup;
   phoneForm: FormGroup;
-  otpForm: FormGroup;
-  authMethod: 'email' | 'otp' = 'otp';
   isLoading = false;
-  otpSent = false;
-  errorMessage = '';
-  successMessage = '';
-  enteredPhone = '';
+  errorMsg = '';
+  successMsg = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private authService: Auth,
-    private router: Router,
-  ) {
+  loginMode: 'email' | 'otp' = 'email';
+  otpSent = false;
+
+  constructor(private fb: FormBuilder, private authService: Auth, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
 
     this.phoneForm = this.fb.group({
-      phone: ['', [Validators.required, Validators.pattern(/^(?:\+91)?\d{10}$/)]],
-    });
-
-    this.otpForm = this.fb.group({
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       otp: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]],
     });
   }
 
-  get email() {
-    return this.loginForm.get('email');
-  }
+  get email() { return this.loginForm.get('email'); }
+  get password() { return this.loginForm.get('password'); }
+  get phone() { return this.phoneForm.get('phone'); }
+  get otp() { return this.phoneForm.get('otp'); }
 
-  get password() {
-    return this.loginForm.get('password');
-  }
-
-  get phone() {
-    return this.phoneForm.get('phone');
-  }
-
-  get otp() {
-    return this.otpForm.get('otp');
-  }
-
-  setAuthMethod(method: 'email' | 'otp'): void {
-    this.authMethod = method;
-    this.errorMessage = '';
-    this.successMessage = '';
+  setMode(mode: 'email' | 'otp') {
+    this.loginMode = mode;
+    this.errorMsg = '';
+    this.successMsg = '';
     this.otpSent = false;
+    this.phoneForm.reset();
+    this.loginForm.reset();
   }
 
-  onSubmitEmail(): void {
+  onSubmit() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
-
     this.isLoading = true;
-    this.errorMessage = '';
-
+    this.errorMsg = '';
     this.authService.login(this.loginForm.value).subscribe({
-      next: (res: AuthResponse) => {
+      next: () => {
         this.isLoading = false;
-        if (res.user.role === 'ADMIN') {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/home']);
-        }
+        const user = this.authService.getCurrentUser();
+        this.router.navigate([user?.role === 'ADMIN' ? '/admin' : '/home']);
       },
-      error: (err: { error?: { message?: string } }) => {
+      error: (err: any) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Invalid email or password.';
+        this.errorMsg = err.error?.message || 'Login failed. Please check your credentials.';
       },
     });
   }
 
-  onSendOtp(): void {
+  sendOtp() {
+    if (this.phone?.invalid) {
+      this.phone.markAsTouched();
+      return;
+    }
+    this.isLoading = true;
+    this.errorMsg = '';
+    this.successMsg = '';
+    const phoneVal = this.phone?.value;
+    this.authService.sendOtp(phoneVal).subscribe({
+      next: (res: any) => {
+        this.isLoading = false;
+        this.otpSent = true;
+        this.successMsg = res.message || 'OTP sent successfully! Check backend console.';
+      },
+      error: (err: any) => {
+        this.isLoading = false;
+        this.errorMsg = err.error?.message || 'Failed to send OTP.';
+      }
+    });
+  }
+
+  verifyOtp() {
     if (this.phoneForm.invalid) {
       this.phoneForm.markAllAsTouched();
       return;
     }
-
     this.isLoading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-    const phoneNumber = this.phoneForm.value.phone;
-
-    this.authService.sendOtp(phoneNumber).subscribe({
-      next: (res: any) => {
+    this.errorMsg = '';
+    this.successMsg = '';
+    const { phone, otp } = this.phoneForm.value;
+    this.authService.verifyOtp(phone, otp).subscribe({
+      next: () => {
         this.isLoading = false;
-        this.otpSent = true;
-        this.enteredPhone = phoneNumber;
-        this.successMessage = res.message || 'OTP sent successfully!';
+        const user = this.authService.getCurrentUser();
+        this.router.navigate([user?.role === 'ADMIN' ? '/admin' : '/home']);
       },
-      error: (err: { error?: { message?: string } }) => {
+      error: (err: any) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Failed to send OTP.';
-      },
+        this.errorMsg = err.error?.message || 'Invalid OTP. Please try again.';
+      }
     });
-  }
-
-  onVerifyOtp(): void {
-    if (this.otpForm.invalid) {
-      this.otpForm.markAllAsTouched();
-      return;
-    }
-
-    this.isLoading = true;
-    this.errorMessage = '';
-    const otpCode = this.otpForm.value.otp;
-
-    this.authService.verifyOtp(this.enteredPhone, otpCode).subscribe({
-      next: (res: AuthResponse) => {
-        this.isLoading = false;
-        if (res.user.role === 'ADMIN') {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/home']);
-        }
-      },
-      error: (err: { error?: { message?: string } }) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Invalid OTP or Verification failed.';
-      },
-    });
-  }
-
-  resetOtpState(): void {
-    this.otpSent = false;
-    this.successMessage = '';
-    this.errorMessage = '';
-    this.otpForm.reset();
   }
 }

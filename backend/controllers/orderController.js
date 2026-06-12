@@ -32,6 +32,7 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
   }
 
   let totalAmount = 0;
+  let hasPaidDelivery = false;
   const validatedItems = [];
 
   for (const item of items) {
@@ -47,11 +48,19 @@ exports.placeOrder = catchAsync(async (req, res, next) => {
     const itemTotal = itemPrice * item.quantity;
     totalAmount += itemTotal;
 
+    if (!foodItem.freeDelivery) {
+      hasPaidDelivery = true;
+    }
+
     validatedItems.push({
       food: foodItem._id,
       quantity: item.quantity,
       price: itemPrice
     });
+  }
+
+  if (hasPaidDelivery) {
+    totalAmount += 50;
   }
 
   const order = await Order.create({
@@ -134,7 +143,11 @@ exports.updateOrderStatus = catchAsync(async (req, res, next) => {
 
   const updateFields = {};
   if (orderStatus) updateFields.orderStatus = orderStatus;
-  if (paymentStatus) updateFields.paymentStatus = paymentStatus;
+  if (paymentStatus) {
+    updateFields.paymentStatus = paymentStatus;
+  } else if (orderStatus === 'DELIVERED') {
+    updateFields.paymentStatus = 'PAID';
+  }
 
   const order = await Order.findByIdAndUpdate(req.params.id, updateFields, {
     new: true,

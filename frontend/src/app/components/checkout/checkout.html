@@ -1,1 +1,149 @@
-<p>checkout works!</p>
+<app-navbar></app-navbar>
+<div class="page-section">
+  <div class="container">
+    <h1 class="page-title">Checkout</h1>
+
+    <div class="checkout-layout">
+      <div class="address-section">
+        @if (errorMsg) {
+          <div class="alert-error"> {{ errorMsg }}</div>
+        }
+
+        @if (savedAddresses.length > 0 && !isNewAddress) {
+          <h2 class="section-title">Select Delivery Address</h2>
+          <div class="saved-addresses-grid">
+            @for (addr of savedAddresses; track addr._id) {
+              <div
+                class="address-card"
+                [class.selected]="selectedAddressId === addr._id"
+                (click)="selectAddress(addr._id!)"
+              >
+                <div class="card-select-header">
+                  <span class="home-icon"> Address</span>
+                  @if (addr.isDefault) {
+                    <span class="default-badge">Default</span>
+                  }
+                </div>
+                <p class="address-details">
+                  {{ addr.street }}<br>
+                  {{ addr.city }}, {{ addr.state }} - {{ addr.zipCode }}
+                </p>
+                <div class="select-indicator"></div>
+              </div>
+            }
+          </div>
+          <button type="button" class="btn-outline add-new-btn" (click)="useNewAddress()">
+             Deliver to a New Address
+          </button>
+        } @else {
+          <h2 class="section-title">
+            Add a New Delivery Address
+            @if (savedAddresses.length > 0) {
+              <span class="back-to-saved" (click)="loadSavedAddresses()">← Use Saved Address</span>
+            }
+          </h2>
+
+          <form [formGroup]="addressForm" (submit)="$event.preventDefault()" class="address-form">
+            <div class="form-group">
+              <label for="co-street">Street / House No.</label>
+              <input id="co-street" type="text" formControlName="street" class="form-control"
+                [class.is-invalid]="street?.invalid && street?.touched" placeholder="e.g. 12A, MG Road" />
+              @if (street?.invalid && street?.touched) {
+                <span class="error-msg">Street address is required</span>
+              }
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="co-city">City</label>
+                <input id="co-city" type="text" formControlName="city" class="form-control"
+                  [class.is-invalid]="city?.invalid && city?.touched" placeholder="Mumbai" />
+                @if (city?.invalid && city?.touched) {
+                  <span class="error-msg">City is required</span>
+                }
+              </div>
+              <div class="form-group">
+                <label for="co-state">State</label>
+                <input id="co-state" type="text" formControlName="state" class="form-control"
+                  [class.is-invalid]="state?.invalid && state?.touched" placeholder="Maharashtra" />
+                @if (state?.invalid && state?.touched) {
+                  <span class="error-msg">State is required</span>
+                }
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="co-zip">Pincode</label>
+              <input id="co-zip" type="text" formControlName="zipCode" class="form-control"
+                [class.is-invalid]="zipCode?.invalid && zipCode?.touched" placeholder="6-digit pincode" maxlength="6" />
+              @if (zipCode?.errors?.['required'] && zipCode?.touched) {
+                <span class="error-msg">Pincode is required</span>
+              }
+              @if (zipCode?.errors?.['pattern'] && zipCode?.touched) {
+                <span class="error-msg">Enter a valid 6-digit pincode</span>
+              }
+            </div>
+
+            <div class="checkbox-group" style="margin-top: 12px; margin-bottom: 8px;">
+              <label class="checkbox-label" style="display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 14px; cursor: pointer;">
+                <input type="checkbox" formControlName="saveToProfile" style="cursor: pointer; accent-color: var(--Summer-500);" /> Save this address to my profile
+              </label>
+            </div>
+          </form>
+        }
+
+        <form [formGroup]="addressForm" (ngSubmit)="placeOrder()" class="checkout-submit-form" style="margin-top: 32px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 24px;">
+          <div class="form-group">
+            <label class="section-title" style="margin-bottom: 16px; font-size: 18px; font-weight: 600; display: block; color: var(--text-light);">Payment Method</label>
+            <div class="payment-options">
+              <label class="payment-option">
+                <input type="radio" formControlName="paymentMethod" value="COD" /> Cash on Delivery
+              </label>
+              <label class="payment-option">
+                <input type="radio" formControlName="paymentMethod" value="ONLINE" /> Online Payment
+              </label>
+            </div>
+          </div>
+
+          <button id="place-order-btn" type="submit" class="btn-primary place-btn" [disabled]="isLoading" style="width: 100%; margin-top: 24px; padding: 14px;">
+            {{ isLoading ? 'Placing Order...' : 'Place Order' }}
+          </button>
+        </form>
+      </div>
+
+      <div class="summary-section">
+        <h2 class="section-title">Order Summary</h2>
+        <div class="order-items">
+          @for (item of items(); track item.food._id) {
+            <div class="order-item">
+              <img [src]="(item.food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + item.food.imageUrl : item.food.imageUrl" [alt]="item.food.name" class="order-item-img" />
+              <div class="order-item-info">
+                <p class="order-item-name">{{ item.food.name }}</p>
+                <p class="order-item-qty">Qty: {{ item.quantity }}</p>
+              </div>
+              <span class="order-item-price">₹{{ item.food.price * item.quantity }}</span>
+            </div>
+          }
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-muted); font-size: 14px;">
+          <span>Items Subtotal</span>
+          <span>₹{{ totalPrice() }}</span>
+        </div>
+        <div class="summary-row" style="display: flex; justify-content: space-between; margin-bottom: 16px; color: var(--text-muted); font-size: 14px;">
+          <span>Delivery Charge</span>
+          @if (deliveryCharge() === 0) {
+            <span style="color: #2ecc71; font-weight: 700;">FREE</span>
+          } @else {
+            <span>₹{{ deliveryCharge() }}</span>
+          }
+        </div>
+        <div class="summary-divider" style="height: 1px; background: rgba(255, 255, 255, 0.08); margin-bottom: 16px;"></div>
+        <div class="summary-total" style="display: flex; justify-content: space-between; font-size: 20px; font-weight: 700; color: var(--text-light);">
+          <span>Grand Total</span>
+          <span>₹{{ grandTotal() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

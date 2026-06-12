@@ -4,8 +4,8 @@ const { protect, restrictTo } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
-// All order routes require authentication
 router.use(protect);
+
 
 router.route('/')
   .post(orderController.placeOrder)

@@ -307,7 +307,6 @@
   box-shadow: 0 6px 15px rgba(240, 105, 15, 0.4);
 }
 
-/* Empty List State */
 .empty-list-state {
   grid-column: 1 / -1;
   text-align: center;
@@ -331,4 +330,41 @@
 
 .empty-list-state p {
   color: var(--text-muted);
+}
+
+.restaurant-card.out-of-stock .card-visual img {
+  filter: grayscale(1) opacity(0.5);
+}
+
+.restaurant-card.out-of-stock .card-details {
+  opacity: 0.6;
+}
+
+.out-of-stock-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  z-index: 3;
+}
+
+.out-of-stock-label {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }

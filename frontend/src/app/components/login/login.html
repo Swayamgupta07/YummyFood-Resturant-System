@@ -1,164 +1,126 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>Welcome Back</h2>
-    <p class="subtitle">Login to your Yum account</p>
-
-    <!-- Auth Method Tabs -->
-    <div class="auth-tabs">
-      <button 
-        type="button" 
-        class="tab-btn" 
-        [class.active]="authMethod === 'otp'" 
-        (click)="setAuthMethod('otp')"
-      >
-        Phone OTP
-      </button>
-      <button 
-        type="button" 
-        class="tab-btn" 
-        [class.active]="authMethod === 'email'" 
-        (click)="setAuthMethod('email')"
-      >
-        Email / Password
-      </button>
+<app-navbar></app-navbar>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">🍽️</div>
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-sub">Login to your YumFood account</p>
     </div>
 
-    <!-- Alert Messages -->
-    @if (errorMessage) {
-      <div class="alert-error">{{ errorMessage }}</div>
-    }
-    @if (successMessage) {
-      <div class="alert-success">{{ successMessage }}</div>
-    }
+    <div class="auth-tabs">
+      <button class="tab-btn" [class.active]="loginMode === 'email'" (click)="setMode('email')"> Email</button>
+      <button class="tab-btn" [class.active]="loginMode === 'otp'" (click)="setMode('otp')">Phone OTP</button>
+    </div>
 
-    <!-- Email / Password Form -->
-    @if (authMethod === 'email') {
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmitEmail()">
-        <!-- Email Field -->
+    @if (errorMsg) { <div class="alert-error">{{ errorMsg }}</div> }
+    @if (successMsg) { <div class="alert-success">{{ successMsg }}</div> }
+
+    @if (loginMode === 'email') {
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
         <div class="form-group">
-          <label for="email">Email Address</label>
+          <label for="login-email">Email Address</label>
           <input
-            id="email"
+            id="login-email"
             type="email"
             formControlName="email"
-            placeholder="Enter your email"
+            class="form-control"
             [class.is-invalid]="email?.invalid && email?.touched"
+            placeholder="you@example.com"
           />
-          @if (email?.invalid && email?.touched) {
-            <span class="error-msg">
-              @if (email?.errors?.['required']) { Email is required. }
-              @else if (email?.errors?.['email']) { Enter a valid email. }
-            </span>
+          @if (email?.errors?.['required'] && email?.touched) {
+            <span class="error-msg">Email is required</span>
+          }
+          @if (email?.errors?.['email'] && email?.touched) {
+            <span class="error-msg">Enter a valid email</span>
           }
         </div>
 
-        <!-- Password Field -->
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="login-password">Password</label>
           <input
-            id="password"
+            id="login-password"
             type="password"
             formControlName="password"
-            placeholder="Enter your password"
+            class="form-control"
             [class.is-invalid]="password?.invalid && password?.touched"
+            placeholder="Min. 6 characters"
           />
-          @if (password?.invalid && password?.touched) {
-            <span class="error-msg">
-              @if (password?.errors?.['required']) { Password is required. }
-              @else if (password?.errors?.['minlength']) { Password must be at least 6 characters. }
-            </span>
+          @if (password?.errors?.['required'] && password?.touched) {
+            <span class="error-msg">Password is required</span>
+          }
+          @if (password?.errors?.['minlength'] && password?.touched) {
+            <span class="error-msg">At least 6 characters required</span>
           }
         </div>
 
-        <!-- Submit Button -->
-        <button type="submit" [disabled]="isLoading" class="btn-submit">
-          @if (isLoading) { Logging in... }
-          @else { Login }
+        <button id="login-submit" type="submit" class="btn-primary submit-btn" [disabled]="isLoading">
+          {{ isLoading ? 'Logging in...' : 'Login' }}
         </button>
       </form>
     }
 
-    <!-- OTP Form -->
-    @if (authMethod === 'otp') {
-      @if (!otpSent) {
-        <!-- Phase 1: Send OTP -->
-        <form [formGroup]="phoneForm" (ngSubmit)="onSendOtp()">
-          <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <div class="input-wrapper">
-              <span class="prefix">+91</span>
-              <input
-                id="phone"
-                type="tel"
-                formControlName="phone"
-                placeholder="Enter 10-digit number"
-                [class.is-invalid]="phone?.invalid && phone?.touched"
-              />
-            </div>
-            @if (phone?.invalid && phone?.touched) {
-              <span class="error-msg">
-                @if (phone?.errors?.['required']) { Phone number is required. }
-                @else if (phone?.errors?.['pattern']) { Enter a valid 10-digit phone number. }
-              </span>
+    @if (loginMode === 'otp') {
+      <form [formGroup]="phoneForm" (submit)="$event.preventDefault()" class="auth-form">
+
+        <div class="form-group">
+          <label for="login-phone">Phone Number</label>
+          <div class="input-with-action">
+            <input
+              id="login-phone"
+              type="text"
+              formControlName="phone"
+              class="form-control"
+              [class.is-invalid]="phone?.invalid && phone?.touched"
+              placeholder="10-digit mobile number"
+              maxlength="10"
+              [readonly]="otpSent"
+            />
+            @if (!otpSent) {
+              <button type="button" class="btn-send-otp" (click)="sendOtp()" [disabled]="isLoading || phone?.invalid">
+                Send OTP
+              </button>
             }
           </div>
+          @if (phone?.errors?.['required'] && phone?.touched) {
+            <span class="error-msg">Phone number is required</span>
+          }
+          @if (phone?.errors?.['pattern'] && phone?.touched) {
+            <span class="error-msg">Enter a valid 10-digit number</span>
+          }
+        </div>
 
-          <button type="submit" [disabled]="isLoading" class="btn-submit">
-            @if (isLoading) { Sending OTP... }
-            @else { Send OTP }
-          </button>
-        </form>
-      } @else {
-        <!-- Phase 2: Verify OTP -->
-        <form [formGroup]="otpForm" (ngSubmit)="onVerifyOtp()">
-          <!-- Phone Number (Readonly) -->
+        @if (otpSent) {
           <div class="form-group">
-            <label>Phone Number</label>
-            <div class="input-wrapper" style="opacity: 0.7; background: rgba(255,255,255,0.01);">
-              <span class="prefix">+91</span>
-              <input
-                type="tel"
-                [value]="enteredPhone"
-                readonly
-                style="cursor: not-allowed;"
-              />
-            </div>
-          </div>
-
-          <!-- OTP Input -->
-          <div class="form-group">
-            <div class="phone-info">
-              <span>OTP sent to <strong>+91 {{ enteredPhone }}</strong></span>
-              <button type="button" class="change-phone-btn" (click)="resetOtpState()">Change</button>
-            </div>
-            <label for="otp">Enter 4-Digit OTP</label>
+            <label for="login-otp">Enter 4-Digit OTP</label>
             <input
-              id="otp"
+              id="login-otp"
               type="text"
               formControlName="otp"
+              class="form-control otp-input-box"
+              [class.is-invalid]="otp?.invalid && otp?.touched"
               placeholder="e.g. 1234"
               maxlength="4"
-              [class.is-invalid]="otp?.invalid && otp?.touched"
             />
-            @if (otp?.invalid && otp?.touched) {
-              <span class="error-msg">
-                @if (otp?.errors?.['required']) { OTP is required. }
-                @else if (otp?.errors?.['pattern']) { OTP must be exactly 4 digits. }
-              </span>
+            @if (otp?.errors?.['required'] && otp?.touched) {
+              <span class="error-msg">OTP is required</span>
             }
+            @if (otp?.errors?.['pattern'] && otp?.touched) {
+              <span class="error-msg">Enter a 4-digit numeric OTP</span>
+            }
+            <span class="change-phone-link" (click)="otpSent = false; successMsg = '';">
+              ✏️ Change phone number
+            </span>
           </div>
 
-          <button type="submit" [disabled]="isLoading" class="btn-submit">
-            @if (isLoading) { Verifying... }
-            @else { Verify & Login }
+          <button id="otp-verify-submit" type="button" class="btn-primary submit-btn" (click)="verifyOtp()" [disabled]="isLoading || phoneForm.invalid">
+            {{ isLoading ? 'Verifying...' : ' Verify & Login' }}
           </button>
-        </form>
-      }
+        }
+      </form>
     }
 
-    <!-- Register Link -->
-    <p class="switch-link">
-      Don't have an account? <a routerLink="/register">Sign Up</a>
+    <p class="auth-switch">
+      Don't have an account? <a routerLink="/register">Sign up here</a>
     </p>
   </div>
 </div>

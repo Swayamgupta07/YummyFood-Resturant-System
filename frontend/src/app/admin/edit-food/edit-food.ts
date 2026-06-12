@@ -1,113 +1,104 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FoodService } from '../../services/food';
-import { Food } from '../../models/food';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
+import { FoodService } from '../../services/food/food';
+import { Food } from '../../models/food/food';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-edit-food',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, Navbar],
   templateUrl: './edit-food.html',
   styleUrl: './edit-food.css',
 })
 export class EditFood implements OnInit {
   foodForm: FormGroup;
-  categories: string[] = ['Starters', 'Salads', 'Mains', 'Desserts', 'Drinks'];
   isLoading = false;
-  foodId!: number;
-  errorMessage = '';
+  isLoadingData = true;
+  errorMsg = '';
+  foodId = '';
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
+  categories = ['Pizza', 'North Indian', 'Biryani', 'Burger', 'South Indian', 'Desserts', 'Cake', 'Noodles', 'Rolls', 'Ice Cream', 'Coffee', 'Pasta'];
 
   constructor(
     private fb: FormBuilder,
     private foodService: FoodService,
-    private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.foodForm = this.fb.group({
-      id: [null],
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      price: ['', [Validators.required, Validators.min(0.01)]],
-      imageUrl: ['', [Validators.required]],
-      category: ['Mains', [Validators.required]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      active: [true],
-      dateOfLaunch: ['', [Validators.required]],
+      name: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(1)]],
+      description: ['', Validators.required],
+      category: ['', Validators.required],
+      isVeg: [false],
       freeDelivery: [false],
+      imageUrl: [''],
+      active: [true],
     });
   }
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      this.foodId = parseInt(idParam);
-      this.loadFoodDetails(this.foodId);
-    } else {
-      this.errorMessage = 'Invalid food item selected.';
+    this.foodId = this.route.snapshot.paramMap.get('id') || '';
+    if (this.foodId) {
+      this.foodService.getFoodById(this.foodId).subscribe({
+        next: (food: Food) => {
+          this.foodForm.patchValue(food);
+          this.previewUrl = food.imageUrl;
+          this.isLoadingData = false;
+        },
+        error: () => { this.isLoadingData = false; this.errorMsg = 'Failed to load food data.'; },
+      });
     }
-  }
-
-  loadFoodDetails(id: number): void {
-    this.foodService.getMenuItemById(id).subscribe({
-      next: (food: Food | undefined) => {
-        if (food) {
-
-          const launchDate = new Date(food.dateOfLaunch)
-            .toISOString()
-            .substring(0, 10);
-
-          this.foodForm.patchValue({
-            id: food.id,
-            name: food.name,
-            price: food.price,
-            imageUrl: food.imageUrl,
-            category: food.category,
-            description: food.description,
-            active: food.active,
-            dateOfLaunch: launchDate,
-            freeDelivery: food.freeDelivery,
-          });
-        } else {
-          this.errorMessage = 'Food item not found.';
-        }
-      },
-      error: () => {
-        this.errorMessage = 'Failed to load food details.';
-      },
-    });
   }
 
   get name() { return this.foodForm.get('name'); }
   get price() { return this.foodForm.get('price'); }
-  get imageUrl() { return this.foodForm.get('imageUrl'); }
-  get category() { return this.foodForm.get('category'); }
   get description() { return this.foodForm.get('description'); }
-  get dateOfLaunch() { return this.foodForm.get('dateOfLaunch'); }
+  get category() { return this.foodForm.get('category'); }
 
-  onSubmit(): void {
-    if (this.foodForm.invalid) {
-      this.foodForm.markAllAsTouched();
-      return;
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => { this.previewUrl = e.target?.result as string; };
+      reader.readAsDataURL(this.selectedFile);
+      this.foodForm.patchValue({ imageUrl: '' });
     }
+  }
 
+  clearSelectedFile() {
+    this.selectedFile = null;
+    this.previewUrl = null;
+    this.foodForm.patchValue({ imageUrl: '' });
+    const fileInput = document.getElementById('ef-file') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onSubmit() {
+    if (this.foodForm.invalid) { this.foodForm.markAllAsTouched(); return; }
     this.isLoading = true;
-    this.errorMessage = '';
-
-    const updatedFood = {
-      ...this.foodForm.value,
-      id: this.foodId,
-      price: parseFloat(this.foodForm.value.price),
-      dateOfLaunch: new Date(this.foodForm.value.dateOfLaunch),
-    };
-
-    this.foodService.updateMenuItem(updatedFood).subscribe({
-      next: () => {
-        this.isLoading = false;
-        this.router.navigate(['/admin']);
-      },
-      error: () => {
-        this.isLoading = false;
-        this.errorMessage = 'Failed to update the dish. Please try again.';
-      },
+    this.errorMsg = '';
+    const formData = new FormData();
+    const val = this.foodForm.value;
+    formData.append('name', val.name);
+    formData.append('price', val.price);
+    formData.append('description', val.description);
+    formData.append('category', val.category);
+    formData.append('isVeg', val.isVeg);
+    formData.append('freeDelivery', val.freeDelivery);
+    formData.append('active', val.active);
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    } else if (val.imageUrl) {
+      formData.append('imageUrl', val.imageUrl);
+    }
+    this.foodService.updateFood(this.foodId, formData).subscribe({
+      next: () => { this.isLoading = false; this.router.navigate(['/admin']); },
+      error: (err: any) => { this.isLoading = false; this.errorMsg = err.error?.message || 'Failed to update.'; },
     });
   }
 }

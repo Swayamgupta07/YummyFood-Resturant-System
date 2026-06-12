@@ -20,6 +20,11 @@ exports.sendOtp = catchAsync(async (req, res, next) => {
     return next(new AppError('Phone number is required', 400));
   }
 
+  const user = await User.findOne({ phone });
+  if (!user) {
+    return next(new AppError('User not registered. Please register first.', 404));
+  }
+
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
   await Otp.findOneAndUpdate(

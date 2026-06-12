@@ -1,0 +1,152 @@
+.page-title { font-family: var(--font-serif); font-size: 2rem; color: var(--text-light); margin-bottom: 32px; }
+.section-title { font-size: 1.25rem; font-weight: 700; color: var(--text-light); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid rgba(240,105,15,0.15); }
+.checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; }
+@media (max-width: 768px) { .checkout-layout { grid-template-columns: 1fr; } }
+
+.address-section, .summary-section {
+  background: rgba(34,15,2,0.7);
+  border: 1px solid rgba(240,105,15,0.15);
+  border-radius: 20px;
+  padding: 28px;
+}
+.address-form { display: flex; flex-direction: column; gap: 20px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.payment-options { display: flex; flex-direction: column; gap: 12px; }
+.payment-option {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px;
+  border: 1.5px solid rgba(240,105,15,0.2);
+  border-radius: 10px; cursor: pointer; transition: all 0.2s;
+  color: var(--text-muted); font-size: 0.95rem;
+}
+.payment-option:has(input:checked) { border-color: var(--Summer-500); background: rgba(240,105,15,0.08); color: var(--text-light); }
+.payment-option input[type="radio"] { accent-color: var(--Summer-500); }
+
+.place-btn { width: 100%; justify-content: center; padding: 16px; font-size: 1rem; }
+.place-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.alert-error { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3); color: #e74c3c; padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; }
+
+.order-items { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+.order-item { display: flex; align-items: center; gap: 12px; }
+.order-item-img { width: 56px; height: 56px; border-radius: 10px; object-fit: cover; }
+.order-item-info { flex: 1; }
+.order-item-name { font-size: 0.9rem; font-weight: 600; color: var(--text-light); }
+.order-item-qty { font-size: 0.8rem; color: var(--text-muted); }
+.order-item-price { font-weight: 700; color: var(--Summer-300); }
+.summary-divider { border: none; border-top: 1px solid rgba(240,105,15,0.15); margin: 16px 0; }
+.summary-total { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; color: var(--text-light); }
+
+.saved-addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.address-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1.5px solid rgba(240, 105, 15, 0.15);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+.address-card:hover {
+  border-color: rgba(240, 105, 15, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.address-card.selected {
+  border-color: var(--Summer-500);
+  background: rgba(240, 105, 15, 0.08);
+}
+
+.card-select-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.home-icon {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.default-badge {
+  background: var(--Summer-500);
+  color: var(--text-light);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.address-details {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.select-indicator {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(240, 105, 15, 0.3);
+}
+
+.address-card.selected .select-indicator {
+  border-color: var(--Summer-500);
+  background: var(--Summer-500);
+}
+
+.address-card.selected .select-indicator::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-light);
+}
+
+.add-new-btn {
+  background: none;
+  border: 1px dashed rgba(240, 105, 15, 0.3);
+  color: var(--Summer-400);
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.add-new-btn:hover {
+  border-color: var(--Summer-500);
+  color: var(--text-light);
+  background: rgba(240, 105, 15, 0.05);
+}
+
+.back-to-saved {
+  font-size: 13px;
+  color: var(--Summer-400);
+  font-weight: 500;
+  cursor: pointer;
+  margin-left: 12px;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.back-to-saved:hover {
+  color: var(--text-light);
+}

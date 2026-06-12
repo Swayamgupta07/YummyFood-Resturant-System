@@ -1,118 +1,69 @@
-<div class="register-container">
-  <div class="register-card">
-    <h2>Create Account</h2>
-    <p class="subtitle">Join Yum and order your favourite food</p>
+<app-navbar></app-navbar>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">🍽️</div>
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-sub">Join YumFood and enjoy great food</p>
+    </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-
-      <!-- Name Field -->
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input
-          id="name"
-          type="text"
-          formControlName="name"
-          placeholder="Enter your full name"
-          [class.is-invalid]="name?.invalid && name?.touched"
-        />
-        @if (name?.invalid && name?.touched) {
-          <span class="error-msg">
-            @if (name?.errors?.['required']) { Name is required. }
-            @else if (name?.errors?.['minlength']) { Name must be at least 2 characters. }
-          </span>
-        }
-      </div>
-
-      <!-- Email Field -->
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="Enter your email"
-          [class.is-invalid]="email?.invalid && email?.touched"
-        />
-        @if (email?.invalid && email?.touched) {
-          <span class="error-msg">
-            @if (email?.errors?.['required']) { Email is required. }
-            @else if (email?.errors?.['email']) { Enter a valid email. }
-          </span>
-        }
-      </div>
-
-      <!-- Phone Field -->
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <div class="input-wrapper">
-          <span class="prefix">+91</span>
-          <input
-            id="phone"
-            type="tel"
-            formControlName="phone"
-            placeholder="Enter 10-digit number"
-            [class.is-invalid]="phone?.invalid && phone?.touched"
-          />
-        </div>
-        @if (phone?.invalid && phone?.touched) {
-          <span class="error-msg">
-            @if (phone?.errors?.['required']) { Phone number is required. }
-            @else if (phone?.errors?.['pattern']) { Enter a valid 10-digit phone number. }
-          </span>
-        }
-      </div>
-
-
-
-      <!-- Password Field -->
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Create a password (min 6 characters)"
-          [class.is-invalid]="password?.invalid && password?.touched"
-        />
-        @if (password?.invalid && password?.touched) {
-          <span class="error-msg">
-            @if (password?.errors?.['required']) { Password is required. }
-            @else if (password?.errors?.['minlength']) { Password must be at least 6 characters. }
-          </span>
-        }
-      </div>
-
-      <!-- Confirm Password Field -->
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
-        <input
-          id="confirmPassword"
-          type="password"
-          formControlName="confirmPassword"
-          placeholder="Confirm your password"
-          [class.is-invalid]="(confirmPassword?.invalid && confirmPassword?.touched) || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)"
-        />
-        @if (confirmPassword?.touched && registerForm.errors?.['passwordMismatch']) {
-          <span class="error-msg">Passwords do not match.</span>
-        }
-      </div>
-
-      <!-- Error Message -->
-      @if (errorMessage) {
-        <div class="alert-error">{{ errorMessage }}</div>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (errorMsg) {
+        <div class="alert-error">{{ errorMsg }}</div>
       }
 
-      <!-- Submit Button -->
-      <button type="submit" [disabled]="isLoading">
-        @if (isLoading) { Creating Account... }
-        @else { Sign Up }
+      <div class="form-group">
+        <label for="reg-name">Full Name</label>
+        <input id="reg-name" type="text" formControlName="name" class="form-control"
+          [class.is-invalid]="name?.invalid && name?.touched" placeholder="Your full name" />
+        @if (name?.errors?.['required'] && name?.touched) {
+          <span class="error-msg">Name is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="reg-email">Email Address</label>
+        <input id="reg-email" type="email" formControlName="email" class="form-control"
+          [class.is-invalid]="email?.invalid && email?.touched" placeholder="you@example.com" />
+        @if (email?.errors?.['required'] && email?.touched) {
+          <span class="error-msg">Email is required</span>
+        }
+        @if (email?.errors?.['email'] && email?.touched) {
+          <span class="error-msg">Enter a valid email</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="reg-phone">Phone Number</label>
+        <input id="reg-phone" type="tel" formControlName="phone" class="form-control"
+          [class.is-invalid]="phone?.invalid && phone?.touched" placeholder="10-digit mobile number" />
+        @if (phone?.errors?.['required'] && phone?.touched) {
+          <span class="error-msg">Phone number is required</span>
+        }
+        @if (phone?.errors?.['pattern'] && phone?.touched) {
+          <span class="error-msg">Enter a valid 10-digit Indian mobile number</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input id="reg-password" type="password" formControlName="password" class="form-control"
+          [class.is-invalid]="password?.invalid && password?.touched" placeholder="Min. 6 characters" />
+        @if (password?.errors?.['required'] && password?.touched) {
+          <span class="error-msg">Password is required</span>
+        }
+        @if (password?.errors?.['minlength'] && password?.touched) {
+          <span class="error-msg">At least 6 characters required</span>
+        }
+      </div>
+
+      <button id="register-submit" type="submit" class="btn-primary submit-btn" [disabled]="isLoading">
+        {{ isLoading ? 'Creating account...' : 'Create Account' }}
       </button>
-
-      <!-- Login Link -->
-      <p class="switch-link">
-        Already have an account? <a routerLink="/login">Login</a>
-      </p>
-
     </form>
+
+    <p class="auth-switch">
+      Already have an account? <a routerLink="/login">Login here</a>
+    </p>
   </div>
 </div>

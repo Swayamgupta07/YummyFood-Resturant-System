@@ -1,67 +1,88 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { FoodService } from '../../services/food';
+import { FoodService } from '../../services/food/food';
+import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
   selector: 'app-add-food',
-  imports: [ReactiveFormsModule, RouterLink],
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, Navbar],
   templateUrl: './add-food.html',
   styleUrl: './add-food.css',
 })
 export class AddFood {
   foodForm: FormGroup;
-  categories: string[] = ['Starters', 'Salads', 'Mains', 'Desserts', 'Drinks'];
   isLoading = false;
-  errorMessage = '';
+  errorMsg = '';
+  selectedFile: File | null = null;
+  previewUrl: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private foodService: FoodService,
-    private router: Router
-  ) {
+  categories = ['Pizza', 'North Indian', 'Biryani', 'Burger', 'South Indian', 'Desserts', 'Cake', 'Noodles', 'Rolls', 'Ice Cream', 'Coffee', 'Pasta'];
+
+  constructor(private fb: FormBuilder, private foodService: FoodService, private router: Router) {
     this.foodForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      price: ['', [Validators.required, Validators.min(0.01)]],
-      imageUrl: ['', [Validators.required]],
-      category: ['Mains', [Validators.required]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      active: [true],
-      dateOfLaunch: [new Date().toISOString().substring(0, 10), [Validators.required]],
+      name: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(1)]],
+      description: ['', Validators.required],
+      category: ['', Validators.required],
+      isVeg: [false],
       freeDelivery: [false],
+      imageUrl: [''],
+      active: [true],
     });
   }
-  
+
   get name() { return this.foodForm.get('name'); }
   get price() { return this.foodForm.get('price'); }
-  get imageUrl() { return this.foodForm.get('imageUrl'); }
-  get category() { return this.foodForm.get('category'); }
   get description() { return this.foodForm.get('description'); }
-  get dateOfLaunch() { return this.foodForm.get('dateOfLaunch'); }
+  get category() { return this.foodForm.get('category'); }
 
-  onSubmit(): void {
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => { this.previewUrl = e.target?.result as string; };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  clearSelectedFile() {
+    this.selectedFile = null;
+    this.previewUrl = null;
+    const fileInput = document.getElementById('af-file') as HTMLInputElement;
+    if (fileInput) fileInput.value = '';
+  }
+
+  onSubmit() {
     if (this.foodForm.invalid) {
       this.foodForm.markAllAsTouched();
       return;
     }
-
     this.isLoading = true;
-    this.errorMessage = '';
+    this.errorMsg = '';
 
-    const newFood = {
-      ...this.foodForm.value,
-      price: parseFloat(this.foodForm.value.price),
-      dateOfLaunch: new Date(this.foodForm.value.dateOfLaunch),
-    };
+    const formData = new FormData();
+    const val = this.foodForm.value;
+    formData.append('name', val.name);
+    formData.append('price', val.price);
+    formData.append('description', val.description);
+    formData.append('category', val.category);
+    formData.append('isVeg', val.isVeg);
+    formData.append('freeDelivery', val.freeDelivery);
+    formData.append('active', val.active);
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    } else if (val.imageUrl) {
+      formData.append('imageUrl', val.imageUrl);
+    }
 
-    this.foodService.addMenuItem(newFood).subscribe({
-      next: () => {
+    this.foodService.addFood(formData).subscribe({
+      next: () => { this.isLoading = false; this.router.navigate(['/admin']); },
+      error: (err: any) => {
         this.isLoading = false;
-        this.router.navigate(['/admin']);
-      },
-      error: () => {
-        this.isLoading = false;
-        this.errorMessage = 'Failed to add the dish. Please try again.';
+        this.errorMsg = err.error?.message || 'Failed to add food item.';
       },
     });
   }

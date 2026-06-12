@@ -1,1 +1,161 @@
-<p>food-details works!</p>
+<app-navbar></app-navbar>
+
+@if (food) {
+  <div class="details-container">
+    <div class="breadcrumb">
+      <a routerLink="/home">Home</a> / 
+      <a [routerLink]="['/category', food.category]">{{ food.category }}</a> / 
+      <span class="active-crumb">{{ food.name }}</span>
+    </div>
+
+    <div class="alerts-container">
+      @if (successMsg) {
+        <div class="alert alert-success">{{ successMsg }}</div>
+      }
+      @if (errorMsg) {
+        <div class="alert alert-danger">{{ errorMsg }}</div>
+      }
+    </div>
+
+    <div class="food-detail-card" [class.out-of-stock]="!food.active">
+      <div class="image-section">
+        <img [src]="(food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + food.imageUrl : food.imageUrl" [alt]="food.name" />
+        <div class="overlay-gradient"></div>
+        <div class="badge-row">
+          <span class="food-type" [class.veg]="food.isVeg" [class.non-veg]="!food.isVeg">
+            <span class="dot"></span>
+          </span>
+          @if (food.freeDelivery) {
+            <span class="delivery-badge">Free Delivery</span>
+          }
+        </div>
+        @if (!food.active) {
+          <div class="out-of-stock-overlay">Out of Stock</div>
+        }
+      </div>
+
+      <div class="info-section">
+        <span class="category-tag">{{ food.category }}</span>
+        <h1>{{ food.name }}</h1>
+        
+        <div class="meta-row">
+          <div class="rating-box">
+            <span class="stars">★ {{ (food.rating && food.rating > 0) ? food.rating : 'New' }}</span>
+            <span class="count">({{ food.reviews?.length || 0 }} reviews)</span>
+          </div>
+          <span class="divider">•</span>
+          <span class="delivery-time">30-40 mins</span>
+        </div>
+
+        <p class="description">{{ food.description }}</p>
+
+        <div class="price-action-row">
+          <span class="price-label">₹{{ food.price.toFixed(2) }}</span>
+          @if (food.active) {
+            <button (click)="addToCart()" class="btn-add-cart">
+              Add to Cart
+            </button>
+          } @else {
+            <button disabled class="btn-disabled">
+              Out of Stock
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="reviews-section">
+      <h2>Ratings & Reviews</h2>
+
+      <div class="reviews-layout">
+        <div class="reviews-list-container">
+          <h3>Customer Reviews</h3>
+          
+          @if (food.reviews && food.reviews.length > 0) {
+            <div class="reviews-list">
+              @for (review of food.reviews; track review._id) {
+                <div class="review-item">
+                  <div class="review-header">
+                    <div class="avatar">{{ review.name.charAt(0).toUpperCase() }}</div>
+                    <div class="reviewer-info">
+                      <h4>{{ review.name }}</h4>
+                      <div class="review-meta">
+                        <span class="rating-stars">
+                          @for (star of [1,2,3,4,5]; track star) {
+                            <span class="star" [class.filled]="star <= review.rating">★</span>
+                          }
+                        </span>
+                        <span class="date">{{ review.createdAt | date:'mediumDate' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="comment">{{ review.comment }}</p>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="no-reviews">
+              <span class="icon">💬</span>
+              <p>No reviews yet. Be the first to share your thoughts!</p>
+            </div>
+          }
+        </div>
+
+        <div class="add-review-container">
+          <h3>Write a Review</h3>
+
+          @if (isLoggedIn) {
+            <form (ngSubmit)="submitReview()" class="review-form">
+              <div class="form-group">
+                <label>Your Rating</label>
+                <div class="rating-selector">
+                  @for (star of [1,2,3,4,5]; track star) {
+                    <span 
+                      (click)="setRating(star)"
+                      (mouseenter)="hoverRating = star"
+                      (mouseleave)="hoverRating = 0"
+                      class="star-btn"
+                      [class.filled]="star <= (hoverRating || newRating)"
+                    >
+                      ★
+                    </span>
+                  }
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="comment">Your Comment</label>
+                <textarea 
+                  id="comment" 
+                  name="comment" 
+                  [(ngModel)]="newComment" 
+                  rows="4" 
+                  placeholder="What did you like or dislike about this dish?"
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="btn-submit-review">Submit Review</button>
+            </form>
+          } @else {
+            <div class="login-prompt">
+              <p>You must be logged in to post a rating and review.</p>
+              <a routerLink="/login" class="btn-login-redirect">Log In Now</a>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (!food && errorMsg) {
+  <div class="error-container">
+    <div class="error-card">
+      <div class="icon">❌</div>
+      <h2>Item Not Found</h2>
+      <p>{{ errorMsg }}</p>
+      <a routerLink="/home" class="btn-back">Go to Home</a>
+    </div>
+  </div>
+}

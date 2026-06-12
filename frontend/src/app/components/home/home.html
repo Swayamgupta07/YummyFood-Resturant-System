@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <div class="home-container">
   <section class="hero-section">
     <div class="hero-content">
@@ -135,38 +136,45 @@
     </div>
 
     <div class="food-grid">
-      @for (food of filteredItems; track food.id) {
-        <div class="food-card">
-          <div class="card-image">
-            <img [src]="food.imageUrl" [alt]="food.name" />
+      @for (food of filteredItems; track food._id) {
+        <div class="food-card" [class.out-of-stock]="!food.active">
+          <div class="card-image" [routerLink]="['/food', food._id]" style="cursor: pointer;">
+             <img [src]="(food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + food.imageUrl : food.imageUrl" [alt]="food.name" />
             <span class="card-category">{{ food.category }}</span>
             @if (food.freeDelivery) {
               <span class="free-delivery-badge">Free Delivery</span>
             }
+            @if (!food.active) {
+              <div class="out-of-stock-overlay">Out of Stock</div>
+            }
           </div>
           <div class="card-body">
             <div class="card-header-row">
-              <h3 [routerLink]="['/food', food.id]">{{ food.name }}</h3>
-              <span class="rating">4.8 ★</span>
+              <h3 [routerLink]="['/food', food._id]">{{ food.name }}</h3>
+              <span class="rating" [routerLink]="['/food', food._id]" style="cursor: pointer;">{{ (food.rating && food.rating > 0) ? food.rating + ' ★' : '★ New' }}</span>
             </div>
             <p class="description">{{ food.description }}</p>
             <div class="card-footer-row">
               <span class="price">₹{{ food.price.toFixed(2) }}</span>
-              <button (click)="addToCart(food)" class="add-to-cart-btn" aria-label="Add to cart">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="plus-icon"
-                >
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-              </button>
+              @if (food.active) {
+                <button (click)="addToCart(food)" class="add-to-cart-btn" aria-label="Add to cart">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="plus-icon"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </button>
+              } @else {
+                <span class="out-of-stock-label">Out of Stock</span>
+              }
             </div>
           </div>
         </div>

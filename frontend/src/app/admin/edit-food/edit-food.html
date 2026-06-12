@@ -1,135 +1,79 @@
-<div class="form-container">
-  <div class="form-card">
+<app-navbar></app-navbar>
+<div class="page-section">
+  <div class="container form-container">
     <div class="form-header">
-      <h2>Edit Gourmet Dish</h2>
-      <p>Modify details of the selected menu offering.</p>
+      <a routerLink="/admin" class="back-btn">← Back to Dashboard</a>
+      <h1 class="page-title">Edit Food Item</h1>
     </div>
 
-    @if (errorMessage) {
-      <div class="alert-error">{{ errorMessage }}</div>
+    @if (isLoadingData) {
+      <div class="loading-state"><div class="spinner"></div><p>Loading food data...</p></div>
+    } @else {
+      <div class="form-card">
+        <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
+          @if (errorMsg) { <div class="alert-error">⚠️ {{ errorMsg }}</div> }
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="ef-name">Food Name</label>
+              <input id="ef-name" type="text" formControlName="name" class="form-control"
+                [class.is-invalid]="name?.invalid && name?.touched" />
+              @if (name?.invalid && name?.touched) { <span class="error-msg">Name is required</span> }
+            </div>
+            <div class="form-group">
+              <label for="ef-price">Price (₹)</label>
+              <input id="ef-price" type="number" formControlName="price" class="form-control"
+                [class.is-invalid]="price?.invalid && price?.touched" />
+              @if (price?.invalid && price?.touched) { <span class="error-msg">Valid price required</span> }
+            </div>
+            <div class="form-group full-width">
+              <label for="ef-desc">Description</label>
+              <textarea id="ef-desc" formControlName="description" class="form-control textarea"
+                [class.is-invalid]="description?.invalid && description?.touched"></textarea>
+              @if (description?.invalid && description?.touched) { <span class="error-msg">Description is required</span> }
+            </div>
+            <div class="form-group">
+              <label for="ef-category">Category</label>
+              <select id="ef-category" formControlName="category" class="form-control"
+                [class.is-invalid]="category?.invalid && category?.touched">
+                @for (cat of categories; track cat) { <option [value]="cat">{{ cat }}</option> }
+              </select>
+              @if (category?.invalid && category?.touched) { <span class="error-msg">Category is required</span> }
+            </div>
+            <div class="form-group">
+              <label for="ef-imageurl">Image URL</label>
+              <input id="ef-imageurl" type="url" formControlName="imageUrl" class="form-control"
+                [attr.disabled]="selectedFile ? true : null" />
+              @if (selectedFile) {
+                <span class="warning-tip">Image file is selected. Clear it to use a URL.</span>
+              }
+            </div>
+            <div class="form-group full-width">
+              <label for="ef-file">Or Upload New Image</label>
+              <input id="ef-file" type="file" accept="image/*" class="file-input" (change)="onFileChange($event)"
+                [attr.disabled]="foodForm.get('imageUrl')?.value ? true : null" />
+              @if (foodForm.get('imageUrl')?.value) {
+                <span class="warning-tip">Image URL is entered. Clear it to upload a file.</span>
+              }
+              @if (previewUrl) {
+                <div class="preview-container">
+                  <img [src]="(previewUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + previewUrl : previewUrl" alt="Preview" class="img-preview" />
+                  <button type="button" class="clear-file-btn" (click)="clearSelectedFile()">✕ Remove Image</button>
+                </div>
+              }
+            </div>
+            <div class="checkbox-group">
+              <label class="checkbox-label"><input type="checkbox" formControlName="isVeg" /> Vegetarian</label>
+              <label class="checkbox-label"><input type="checkbox" formControlName="freeDelivery" /> Free Delivery</label>
+              <label class="checkbox-label"><input type="checkbox" formControlName="active" /> In Stock / Active</label>
+            </div>
+          </div>
+
+          <button id="edit-food-submit" type="submit" class="btn-primary submit-btn" [disabled]="isLoading">
+            {{ isLoading ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </form>
+      </div>
     }
-
-    <form [formGroup]="foodForm" (ngSubmit)="onSubmit()">
-      <!-- Row 1: Name and Price -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="name">Dish Name</label>
-          <input
-            id="name"
-            type="text"
-            formControlName="name"
-            placeholder="e.g.,  Pumpkin Pie"
-            [class.is-invalid]="name?.invalid && name?.touched"
-          />
-          @if (name?.invalid && name?.touched) {
-            <span class="error-msg">
-              @if (name?.errors?.['required']) { Name is required. }
-              @else if (name?.errors?.['minlength']) { Name must be at least 3 characters. }
-            </span>
-          }
-        </div>
-
-        <div class="form-group price-group">
-          <label for="price">Price (₹)</label>
-          <input
-            id="price"
-            type="number"
-            formControlName="price"
-            placeholder="e.g., 299"
-            [class.is-invalid]="price?.invalid && price?.touched"
-          />
-          @if (price?.invalid && price?.touched) {
-            <span class="error-msg">
-              @if (price?.errors?.['required']) { Price is required. }
-              @else if (price?.errors?.['min']) { Price must be greater than zero. }
-            </span>
-          }
-        </div>
-      </div>
-
-      <!-- Row 2: Image URL and Category -->
-      <div class="form-row">
-        <div class="form-group">
-          <label for="imageUrl">Image URL</label>
-          <input
-            id="imageUrl"
-            type="url"
-            formControlName="imageUrl"
-            placeholder="https://images.unsplash.com/..."
-            [class.is-invalid]="imageUrl?.invalid && imageUrl?.touched"
-          />
-          @if (imageUrl?.invalid && imageUrl?.touched) {
-            <span class="error-msg">Image URL is required.</span>
-          }
-        </div>
-
-        <div class="form-group">
-          <label for="category">Category</label>
-          <select id="category" formControlName="category">
-            @for (cat of categories; track cat) {
-              <option [value]="cat">{{ cat }}</option>
-            }
-          </select>
-        </div>
-      </div>
-
-      <!-- Row 3: Launch Date and Checkboxes -->
-      <div class="form-row items-align-center">
-        <div class="form-group">
-          <label for="dateOfLaunch">Launch Date</label>
-          <input
-            id="dateOfLaunch"
-            type="date"
-            formControlName="dateOfLaunch"
-            [class.is-invalid]="dateOfLaunch?.invalid && dateOfLaunch?.touched"
-          />
-          @if (dateOfLaunch?.invalid && dateOfLaunch?.touched) {
-            <span class="error-msg">Launch Date is required.</span>
-          }
-        </div>
-
-        <!-- Switches container -->
-        <div class="checkboxes-wrapper">
-          <label class="custom-checkbox">
-            <input type="checkbox" formControlName="active" />
-            <span class="checkmark"></span>
-            Make Active (Show in menu)
-          </label>
-
-          <label class="custom-checkbox">
-            <input type="checkbox" formControlName="freeDelivery" />
-            <span class="checkmark"></span>
-            Free Delivery
-          </label>
-        </div>
-      </div>
-
-      <!-- Row 4: Description -->
-      <div class="form-group full-width">
-        <label for="description">Description</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          rows="4"
-          placeholder="Describe the dish ingredients, preparation, and taste profile..."
-          [class.is-invalid]="description?.invalid && description?.touched"
-        ></textarea>
-        @if (description?.invalid && description?.touched) {
-          <span class="error-msg">
-            @if (description?.errors?.['required']) { Description is required. }
-            @else if (description?.errors?.['minlength']) { Description must be at least 10 characters long. }
-          </span>
-        }
-      </div>
-
-      <!-- Form CTAs -->
-      <div class="form-actions">
-        <a routerLink="/admin" class="btn-cancel">Cancel</a>
-        <button type="submit" [disabled]="isLoading" class="btn-submit">
-          @if (isLoading) { Saving Changes... }
-          @else { Save Changes }
-        </button>
-      </div>
-    </form>
   </div>
 </div>

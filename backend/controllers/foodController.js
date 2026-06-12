@@ -7,10 +7,6 @@ exports.getAllFoods = catchAsync(async (req, res, next) => {
   const excludeFields = ['page', 'sort', 'limit', 'fields', 'search'];
   excludeFields.forEach(el => delete queryObj[el]);
 
-  if (!req.query.includeInactive) {
-    queryObj.active = true;
-  }
-
   if (req.query.isVeg) {
     queryObj.isVeg = req.query.isVeg === 'true';
   }
