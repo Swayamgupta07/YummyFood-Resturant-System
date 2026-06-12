@@ -130,7 +130,7 @@
             <tbody>
               @for (food of foods; track food._id) {
                 <tr>
-                  <td><img [src]="(food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + food.imageUrl : food.imageUrl" [alt]="food.name" class="food-thumb" /></td>
+                  <td><img [src]="food.imageUrl | imageUrl" [alt]="food.name" class="food-thumb" /></td>
                   <td class="food-name-cell">{{ food.name }}</td>
                   <td>{{ food.category }}</td>
                   <td class="price-cell">₹{{ food.price }}</td>

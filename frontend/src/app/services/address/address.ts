@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AddressInfo } from '../../models/user/user';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Address {
-  private apiUrl = 'http://localhost:5000/api/users/addresses';
+  private apiUrl = `${environment.apiUrl}/users/addresses`;
 
   constructor(private http: HttpClient) {}
 

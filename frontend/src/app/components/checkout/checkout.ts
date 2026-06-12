@@ -7,11 +7,13 @@ import { OrderService } from '../../services/order/order';
 import { Address } from '../../services/address/address';
 import { AddressInfo } from '../../models/user/user';
 import { Navbar } from '../navbar/navbar';
+import { ImageUrlPipe } from '../../pipes/image-url/image-url';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, Navbar],
+  imports: [ReactiveFormsModule, CommonModule, Navbar, ImageUrlPipe],
   templateUrl: './checkout.html',
   styleUrl: './checkout.css',
 })
@@ -33,7 +35,8 @@ export class Checkout implements OnInit {
     private cartService: CartService,
     private orderService: OrderService,
     private addressService: Address,
-    private router: Router
+    private router: Router,
+    private toastService: ToastService
   ) {
     this.addressForm = this.fb.group({
       street: ['', Validators.required],
@@ -142,6 +145,7 @@ export class Checkout implements OnInit {
       next: () => {
         this.cartService.clearCart();
         this.isLoading = false;
+        this.toastService.show('Order placed successfully!', 'success');
         this.router.navigate(['/order-history']);
       },
       error: (err: any) => {

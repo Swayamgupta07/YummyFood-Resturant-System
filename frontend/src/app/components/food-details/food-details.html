@@ -19,7 +19,7 @@
 
     <div class="food-detail-card" [class.out-of-stock]="!food.active">
       <div class="image-section">
-        <img [src]="(food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + food.imageUrl : food.imageUrl" [alt]="food.name" />
+        <img [src]="food.imageUrl | imageUrl" [alt]="food.name" />
         <div class="overlay-gradient"></div>
         <div class="badge-row">
           <span class="food-type" [class.veg]="food.isVeg" [class.non-veg]="!food.isVeg">

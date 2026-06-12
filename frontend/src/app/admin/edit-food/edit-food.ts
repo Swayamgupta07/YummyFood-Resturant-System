@@ -5,11 +5,13 @@ import { FoodService } from '../../services/food/food';
 import { Food } from '../../models/food/food';
 import { Navbar } from '../../components/navbar/navbar';
 import { FOOD_CATEGORIES } from '../../constants/constants';
+import { ImageUrlPipe } from '../../pipes/image-url/image-url';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-edit-food',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, Navbar],
+  imports: [ReactiveFormsModule, RouterLink, Navbar, ImageUrlPipe],
   templateUrl: './edit-food.html',
   styleUrl: './edit-food.css',
 })
@@ -25,9 +27,10 @@ export class EditFood implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private foodService: FoodService,
+    private route: ActivatedRoute,
     private router: Router,
-    private route: ActivatedRoute
+    private foodService: FoodService,
+    private toastService: ToastService
   ) {
     this.foodForm = this.fb.group({
       name: ['', Validators.required],
@@ -98,7 +101,11 @@ export class EditFood implements OnInit {
       formData.append('imageUrl', val.imageUrl);
     }
     this.foodService.updateFood(this.foodId, formData).subscribe({
-      next: () => { this.isLoading = false; this.router.navigate(['/admin']); },
+      next: () => {
+        this.isLoading = false;
+        this.toastService.show('Food item updated successfully!', 'success');
+        this.router.navigate(['/admin']);
+      },
       error: (err: any) => { this.isLoading = false; this.errorMsg = err.error?.message || 'Failed to update.'; },
     });
   }

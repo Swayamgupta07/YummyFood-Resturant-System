@@ -147,56 +147,72 @@
       </div>
     </div>
 
-    <div class="food-grid">
-      @for (food of filteredItems; track food._id) {
-        <div class="food-card" [class.out-of-stock]="!food.active">
-          <div class="card-image" [routerLink]="['/food', food._id]" style="cursor: pointer;">
-             <img [src]="(food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + food.imageUrl : food.imageUrl" [alt]="food.name" />
-            <span class="card-category">{{ food.category }}</span>
-            @if (food.freeDelivery) {
-              <span class="free-delivery-badge">Free Delivery</span>
-            }
-            @if (!food.active) {
-              <div class="out-of-stock-overlay">Out of Stock</div>
-            }
-          </div>
-          <div class="card-body">
-            <div class="card-header-row">
-              <h3 [routerLink]="['/food', food._id]">{{ food.name }}</h3>
-              <span class="rating" [routerLink]="['/food', food._id]" style="cursor: pointer;">{{ (food.rating && food.rating > 0) ? food.rating + ' ★' : '★ New' }}</span>
+    @if (isLoading) {
+      <div class="skeleton-grid">
+        @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+          <div class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-text title"></div>
+            <div class="skeleton-text desc"></div>
+            <div class="skeleton-footer">
+              <div class="skeleton-text price"></div>
+              <div class="skeleton-btn"></div>
             </div>
-            <p class="description">{{ food.description }}</p>
-            <div class="card-footer-row">
-              <span class="price">₹{{ food.price.toFixed(2) }}</span>
-              @if (food.active) {
-                <button (click)="addToCart(food)" class="add-to-cart-btn" aria-label="Add to cart">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="plus-icon"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </button>
-              } @else {
-                <span class="out-of-stock-label">Out of Stock</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="food-grid">
+        @for (food of filteredItems; track food._id) {
+          <div class="food-card" [class.out-of-stock]="!food.active" [appTooltip]="!food.active ? 'This item is currently out of stock' : ''">
+            <div class="card-image" [routerLink]="['/food', food._id]" style="cursor: pointer;">
+              <img [src]="food.imageUrl | imageUrl" [alt]="food.name" />
+              <span class="card-category">{{ food.category }}</span>
+              @if (food.freeDelivery) {
+                <span class="free-delivery-badge" [appTooltip]="'Enjoy free delivery on this item!'">Free Delivery</span>
+              }
+              @if (!food.active) {
+                <div class="out-of-stock-overlay">Out of Stock</div>
               }
             </div>
+            <div class="card-body">
+              <div class="card-header-row">
+                <h3 [routerLink]="['/food', food._id]">{{ food.name }}</h3>
+                <span class="rating" [routerLink]="['/food', food._id]" style="cursor: pointer;" [appTooltip]="(food.rating && food.rating > 0) ? 'Average customer rating: ' + food.rating : 'No reviews yet'">{{ (food.rating && food.rating > 0) ? food.rating + ' ★' : '★ New' }}</span>
+              </div>
+              <p class="description">{{ food.description }}</p>
+              <div class="card-footer-row">
+                <span class="price">₹{{ food.price.toFixed(2) }}</span>
+                @if (food.active) {
+                  <button (click)="addToCart(food)" class="add-to-cart-btn" aria-label="Add to cart" [appTooltip]="'Add to your cart'">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="plus-icon"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                } @else {
+                  <span class="out-of-stock-label" [appTooltip]="'Unavailable'">Out of Stock</span>
+                }
+              </div>
+            </div>
           </div>
-        </div>
-      } @empty {
-        <div class="empty-state">
-          <div class="empty-icon">🍽️</div>
-          <h3>No items found</h3>
-          <p>Try searching for a different dish or clear your filters.</p>
-        </div>
-      }
-    </div>
+        } @empty {
+          <div class="empty-state">
+            <div class="empty-icon">🍽️</div>
+            <h3>No items found</h3>
+            <p>Try searching for a different dish or clear your filters.</p>
+          </div>
+        }
+      </div>
+    }
   </section>
 </div>

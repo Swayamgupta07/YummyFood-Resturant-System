@@ -57,7 +57,7 @@
               }
               @if (previewUrl) {
                 <div class="preview-container">
-                  <img [src]="(previewUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + previewUrl : previewUrl" alt="Preview" class="img-preview" />
+                  <img [src]="previewUrl | imageUrl" alt="Preview" class="img-preview" />
                   <button type="button" class="clear-file-btn" (click)="clearSelectedFile()">✕ Remove Image</button>
                 </div>
               }

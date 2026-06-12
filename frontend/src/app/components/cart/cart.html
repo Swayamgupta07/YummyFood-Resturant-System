@@ -17,7 +17,7 @@
         <div class="cart-items">
           @for (item of items(); track item.food._id) {
             <div class="cart-item">
-              <img [src]="(item.food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + item.food.imageUrl : item.food.imageUrl" [alt]="item.food.name" class="item-img" />
+              <img [src]="item.food.imageUrl | imageUrl" [alt]="item.food.name" class="item-img" />
               <div class="item-info">
                 <p class="item-category">{{ item.food.category }}</p>
                 <h3 class="item-name">{{ item.food.name }}</h3>

@@ -5,11 +5,14 @@ import { FoodService } from '../../services/food/food';
 import { CartService } from '../../services/cart/cart';
 import { Food } from '../../models/food/food';
 import { Navbar } from '../navbar/navbar';
+import { ImageUrlPipe } from '../../pipes/image-url/image-url';
+import { TooltipDirective } from '../../directives/tooltip/tooltip';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-food-list',
   standalone: true,
-  imports: [RouterLink, CommonModule, Navbar],
+  imports: [RouterLink, CommonModule, Navbar, ImageUrlPipe, TooltipDirective],
   templateUrl: './food-list.html',
   styleUrl: './food-list.css',
 })
@@ -18,6 +21,7 @@ export class FoodList implements OnInit {
   categoryDescription: string = '';
   foods: Food[] = [];
   filteredFoods: Food[] = [];
+  isLoading: boolean = true;
 
   activeSort: string = 'Relevance';
   vegOnly: boolean = false;
@@ -27,7 +31,8 @@ export class FoodList implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private foodService: FoodService,
-    private cartService: CartService
+    private cartService: CartService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -60,10 +65,15 @@ export class FoodList implements OnInit {
   }
 
   loadFoods(category: string): void {
+    this.isLoading = true;
     this.foodService.getFoods(category).subscribe({
       next: (items: Food[]) => {
         this.foods = items;
         this.applyFilters();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
       }
     });
   }
@@ -114,5 +124,6 @@ export class FoodList implements OnInit {
 
   addToCart(food: Food): void {
     this.cartService.addToCart(food);
+    this.toastService.show(`${food.name} added to cart!`, 'success');
   }
 }

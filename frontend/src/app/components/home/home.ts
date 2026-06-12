@@ -6,11 +6,14 @@ import { CartService } from '../../services/cart/cart';
 import { Food } from '../../models/food/food';
 import { Navbar } from '../navbar/navbar';
 import { SYSTEM_IMAGES } from '../../constants/constants';
+import { ImageUrlPipe } from '../../pipes/image-url/image-url';
+import { TooltipDirective } from '../../directives/tooltip/tooltip';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, FormsModule, Navbar],
+  imports: [RouterLink, FormsModule, Navbar, ImageUrlPipe, TooltipDirective],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -20,23 +23,30 @@ export class Home implements OnInit {
   categories: string[] = ['All'];
   selectedCategory: string = 'All';
   searchQuery: string = '';
+  isLoading: boolean = true;
 
   swiggyCategories: any[] = [];
   systemImages = SYSTEM_IMAGES;
 
   constructor(
     private foodService: FoodService,
-    private cartService: CartService
+    private cartService: CartService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.foodService.getFoods().subscribe({
       next: (items: Food[]) => {
         this.menuItems = items;
         this.filteredItems = items;
         const dbCategories = Array.from(new Set(items.map(f => f.category)));
         this.categories = ['All', ...dbCategories];
+        this.isLoading = false;
       },
+      error: () => {
+        this.isLoading = false;
+      }
     });
 
     this.foodService.getCategories().subscribe({
@@ -86,5 +96,6 @@ export class Home implements OnInit {
 
   addToCart(food: Food): void {
     this.cartService.addToCart(food);
+    this.toastService.show(`${food.name} added to cart!`, 'success');
   }
 }

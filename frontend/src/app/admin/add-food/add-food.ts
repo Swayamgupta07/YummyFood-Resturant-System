@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FoodService } from '../../services/food/food';
 import { Navbar } from '../../components/navbar/navbar';
 import { FOOD_CATEGORIES } from '../../constants/constants';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-add-food',
@@ -21,7 +22,12 @@ export class AddFood {
 
   categories = FOOD_CATEGORIES;
 
-  constructor(private fb: FormBuilder, private foodService: FoodService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private foodService: FoodService,
+    private router: Router,
+    private toastService: ToastService
+  ) {
     this.foodForm = this.fb.group({
       name: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(1)]],
@@ -80,7 +86,11 @@ export class AddFood {
     }
 
     this.foodService.addFood(formData).subscribe({
-      next: () => { this.isLoading = false; this.router.navigate(['/admin']); },
+      next: () => {
+        this.isLoading = false;
+        this.toastService.show('Food item added successfully!', 'success');
+        this.router.navigate(['/admin']);
+      },
       error: (err: any) => {
         this.isLoading = false;
         this.errorMsg = err.error?.message || 'Failed to add food item.';

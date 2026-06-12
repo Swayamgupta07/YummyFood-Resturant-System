@@ -7,11 +7,13 @@ import { CartService } from '../../services/cart/cart';
 import { Auth } from '../../services/auth/auth';
 import { Food } from '../../models/food/food';
 import { Navbar } from '../navbar/navbar';
+import { ImageUrlPipe } from '../../pipes/image-url/image-url';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-food-details',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule, Navbar],
+  imports: [RouterLink, CommonModule, FormsModule, Navbar, ImageUrlPipe],
   templateUrl: './food-details.html',
   styleUrl: './food-details.css',
 })
@@ -31,7 +33,8 @@ export class FoodDetails implements OnInit {
     private route: ActivatedRoute,
     private foodService: FoodService,
     private cartService: CartService,
-    private authService: Auth
+    private authService: Auth,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -63,8 +66,7 @@ export class FoodDetails implements OnInit {
   addToCart(): void {
     if (this.food && this.food.active) {
       this.cartService.addToCart(this.food);
-      this.successMsg = 'Added to cart successfully!';
-      setTimeout(() => (this.successMsg = ''), 3000);
+      this.toastService.show(`${this.food.name} added to cart!`, 'success');
     }
   }
 
@@ -85,9 +87,8 @@ export class FoodDetails implements OnInit {
         this.food = updatedFood;
         this.newComment = '';
         this.newRating = 5;
-        this.successMsg = 'Thank you for your review!';
+        this.toastService.show('Review submitted successfully!', 'success');
         this.errorMsg = '';
-        setTimeout(() => (this.successMsg = ''), 3000);
       },
       error: (err: any) => {
         this.errorMsg = err.error?.message || 'Failed to submit review.';

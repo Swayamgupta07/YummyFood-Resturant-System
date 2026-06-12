@@ -1,0 +1,19 @@
+<div class="toast-wrapper">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div class="toast-card" [ngClass]="toast.type" (click)="toastService.remove(toast.id)">
+      <div class="toast-icon">
+        @if (toast.type === 'success') {
+          <span>✅</span>
+        } @else if (toast.type === 'error') {
+          <span>❌</span>
+        } @else if (toast.type === 'warning') {
+          <span>⚠️</span>
+        } @else {
+          <span>ℹ️</span>
+        }
+      </div>
+      <div class="toast-message">{{ toast.message }}</div>
+      <button class="toast-close" aria-label="Close toast">&times;</button>
+    </div>
+  }
+</div>

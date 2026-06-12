@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth/auth';
 import { Navbar } from '../navbar/navbar';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +17,12 @@ export class Register {
   isLoading = false;
   errorMsg = '';
 
-  constructor(private fb: FormBuilder, private authService: Auth, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: Auth,
+    private router: Router,
+    private toastService: ToastService
+  ) {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
@@ -40,11 +46,11 @@ export class Register {
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         this.isLoading = false;
+        this.toastService.show('Account created successfully!', 'success');
         this.router.navigate(['/home']);
       },
-      error: (err: any) => {
+      error: () => {
         this.isLoading = false;
-        this.errorMsg = err.error?.message || 'Registration failed. Please try again.';
       },
     });
   }

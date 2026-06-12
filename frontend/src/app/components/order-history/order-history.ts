@@ -3,11 +3,12 @@ import { OrderService } from '../../services/order/order';
 import { Order } from '../../models/order/order';
 import { Navbar } from '../navbar/navbar';
 import { RouterLink } from '@angular/router';
+import { ImageUrlPipe } from '../../pipes/image-url/image-url';
 
 @Component({
   selector: 'app-order-history',
   standalone: true,
-  imports: [Navbar, RouterLink],
+  imports: [Navbar, RouterLink, ImageUrlPipe],
   templateUrl: './order-history.html',
   styleUrl: './order-history.css',
 })

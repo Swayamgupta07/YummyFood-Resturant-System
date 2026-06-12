@@ -116,7 +116,7 @@
         <div class="order-items">
           @for (item of items(); track item.food._id) {
             <div class="order-item">
-              <img [src]="(item.food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + item.food.imageUrl : item.food.imageUrl" [alt]="item.food.name" class="order-item-img" />
+              <img [src]="item.food.imageUrl | imageUrl" [alt]="item.food.name" class="order-item-img" />
               <div class="order-item-info">
                 <p class="order-item-name">{{ item.food.name }}</p>
                 <p class="order-item-qty">Qty: {{ item.quantity }}</p>

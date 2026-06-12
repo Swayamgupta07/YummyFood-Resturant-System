@@ -38,7 +38,7 @@
             <div class="order-items">
               @for (item of order.items; track item.food._id) {
                 <div class="order-item">
-                  <img [src]="(item.food.imageUrl || '').startsWith('/uploads') ? 'http://localhost:5000' + item.food.imageUrl : item.food.imageUrl" [alt]="item.food.name" class="item-img" />
+                  <img [src]="item.food.imageUrl | imageUrl" [alt]="item.food.name" class="item-img" />
                   <div class="item-info">
                     <p class="item-name">{{ item.food.name }}</p>
                     <p class="item-qty">Qty: {{ item.quantity }}</p>

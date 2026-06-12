@@ -7,11 +7,13 @@ import { Food } from '../../models/food/food';
 import { Order } from '../../models/order/order';
 import { Navbar } from '../../components/navbar/navbar';
 import { ORDER_STATUSES } from '../../constants/constants';
+import { ImageUrlPipe } from '../../pipes/image-url/image-url';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [RouterLink, Navbar, DecimalPipe],
+  imports: [RouterLink, Navbar, DecimalPipe, ImageUrlPipe],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
@@ -28,7 +30,8 @@ export class AdminDashboard implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private foodService: FoodService
+    private foodService: FoodService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
@@ -64,6 +67,7 @@ export class AdminDashboard implements OnInit {
         const idx = this.orders.findIndex((o) => o._id === orderId);
         if (idx > -1) this.orders[idx] = updated;
         this.loadStats();
+        this.toastService.show(`Order status updated to ${status}!`, 'success');
       },
     });
   }
@@ -74,6 +78,7 @@ export class AdminDashboard implements OnInit {
         const idx = this.orders.findIndex((o) => o._id === orderId);
         if (idx > -1) this.orders[idx] = updated;
         this.loadStats();
+        this.toastService.show(`Order payment status updated to ${paymentStatus}!`, 'success');
       },
     });
   }
@@ -81,7 +86,10 @@ export class AdminDashboard implements OnInit {
   deleteFood(id: string) {
     if (!confirm('Are you sure you want to delete this food item?')) return;
     this.foodService.deleteFood(id).subscribe({
-      next: () => { this.foods = this.foods.filter((f) => f._id !== id); },
+      next: () => {
+        this.foods = this.foods.filter((f) => f._id !== id);
+        this.toastService.show('Food item deleted successfully!', 'success');
+      },
     });
   }
 

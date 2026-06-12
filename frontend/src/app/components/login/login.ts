@@ -3,6 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } 
 import { Router, RouterLink } from '@angular/router';
 import { Auth } from '../../services/auth/auth';
 import { Navbar } from '../navbar/navbar';
+import { ToastService } from '../../services/toast/toast';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,12 @@ export class Login {
   loginMode: 'email' | 'otp' = 'email';
   otpSent = false;
 
-  constructor(private fb: FormBuilder, private authService: Auth, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: Auth,
+    private router: Router,
+    private toastService: ToastService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -57,12 +63,12 @@ export class Login {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.isLoading = false;
+        this.toastService.show('Logged in successfully!', 'success');
         const user = this.authService.getCurrentUser();
         this.router.navigate([user?.role === 'ADMIN' ? '/admin' : '/home']);
       },
-      error: (err: any) => {
+      error: () => {
         this.isLoading = false;
-        this.errorMsg = err.error?.message || 'Login failed. Please check your credentials.';
       },
     });
   }
@@ -80,11 +86,10 @@ export class Login {
       next: (res: any) => {
         this.isLoading = false;
         this.otpSent = true;
-        this.successMsg = res.message || 'OTP sent successfully! Check backend console.';
+        this.toastService.show(res.message || 'OTP sent successfully! Check backend console.', 'success');
       },
-      error: (err: any) => {
+      error: () => {
         this.isLoading = false;
-        this.errorMsg = err.error?.message || 'Failed to send OTP.';
       }
     });
   }
@@ -101,12 +106,12 @@ export class Login {
     this.authService.verifyOtp(phone, otp).subscribe({
       next: () => {
         this.isLoading = false;
+        this.toastService.show('Logged in successfully!', 'success');
         const user = this.authService.getCurrentUser();
         this.router.navigate([user?.role === 'ADMIN' ? '/admin' : '/home']);
       },
-      error: (err: any) => {
+      error: () => {
         this.isLoading = false;
-        this.errorMsg = err.error?.message || 'Invalid OTP. Please try again.';
       }
     });
   }
