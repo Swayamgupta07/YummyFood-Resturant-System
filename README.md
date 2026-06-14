@@ -113,5 +113,3 @@ ng serve
 - **Authentication Flow**: Incoming HTTP requests are intercepted by an Auth Interceptor which automatically attaches the JWT token to the `Authorization` header for secure endpoints.
 - **Modular Design**: The backend follows a strict Controller-Route-Model architecture for clean code separation.
 
----
-*Developed as a capstone project for Wipro Training.*
