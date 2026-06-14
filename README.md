@@ -1,6 +1,6 @@
 # TruYum Restaurant System 🍕
 
-![Angular](https://img.shields.io/badge/Angular-18-red.svg) ![Node.js](https://img.shields.io/badge/Node.js-Express-green.svg) ![MongoDB](https://img.shields.io/badge/MongoDB-Database-blue.svg)
+![Angular](https://img.shields.io/badge/Angular-21-red.svg) ![Node.js](https://img.shields.io/badge/Node.js-Express-green.svg) ![MongoDB](https://img.shields.io/badge/MongoDB-Database-blue.svg)
 
 A full-stack, modern restaurant management and food ordering system built using the **MEAN Stack** (MongoDB, Express.js, Angular, Node.js). This platform provides a seamless food ordering experience for customers and a powerful management dashboard for administrators.
 
@@ -27,7 +27,7 @@ A full-stack, modern restaurant management and food ordering system built using 
 ## 🛠️ Technology Stack
 
 ### Frontend (Client-Side)
-- **Framework**: Angular 18 (Standalone Components)
+- **Framework**: Angular 21 (Standalone Components)
 - **Styling**: Bootstrap 5, Vanilla CSS, CSS Variables
 - **State Management**: Angular Signals
 - **Routing**: Angular Router with `withInMemoryScrolling` (Smooth Scroll & Position Restoration)
@@ -52,8 +52,8 @@ Follow these steps to run the project on your local machine.
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/your-username/truyum-restaurant-system.git
-cd truyum-restaurant-system
+git clone https://github.com/Swayamgupta07/YummyFood-Resturant-System.git
+cd YummyFood-Resturant-System
 ```
 
 ### 2. Backend Setup
