@@ -6,6 +6,13 @@ A full-stack, modern restaurant management and food ordering system built using 
 
 ---
 
+## 🌍 Live Demo & Deployments
+
+- **Frontend (Live Website):** [https://yummy-food-resturant-system.vercel.app/](https://truyum.vercel.app)
+- **Backend API:** [https://truyum-backend.onrender.com/](https://truyum-backend.onrender.com/)
+
+---
+
 ## 🚀 Key Features
 
 ### 🛒 For Customers
